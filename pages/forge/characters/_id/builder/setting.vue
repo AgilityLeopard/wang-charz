@@ -1,25 +1,19 @@
 <template lang="html">
   <v-row justify="left">
-
     <v-dialog
       v-model="selectAvatarDialog"
       width="600px"
       scrollable
       :fullscreen="$vuetify.breakpoint.xsOnly"
     >
-
       <v-card class="pa-0">
-
-        <v-card-title style="background-color: #262e37; color: #fff;">
-          <span>Confirm Portrait</span>
+        <v-card-title style="background-color: #262e37; color: #fff">
+          <span>Подтвердить арт</span>
           <v-spacer />
-          <v-icon dark @click="selectAvatarDialog = false">
-            close
-          </v-icon>
+          <v-icon dark @click="selectAvatarDialog = false"> закрыть </v-icon>
         </v-card-title>
 
         <v-card-text class="pt-4">
-
           <div>
             <client-only>
               <croppa
@@ -31,47 +25,46 @@
               ></croppa>
             </client-only>
           </div>
-          <span class="caption">Drag and zoom (by scrolling) until it fits.</span>
+          <span class="caption"
+            >Перетащите и масштабируйте (путем прокрутки), пока оно не
+            поместится.</span
+          >
 
           <div>
             <v-switch
               v-model="myCroppaConfig.preventWhiteSpace"
-              label="Prevent whitespace, thus the image must be within borders."
+              label="Не допускайте пробелов, поэтому изображение должно находиться в пределах границ."
               dense
             ></v-switch>
           </div>
-
-
         </v-card-text>
 
         <v-card-actions>
           <v-btn left outlined color="red" @click="selectAvatarDialog = false">
-            Cancel
+            Отмена
           </v-btn>
           <v-spacer />
           <v-btn right color="green" @click="setNewAvatar">
-            Select Portrait
+            Выбор портрета
           </v-btn>
         </v-card-actions>
-
       </v-card>
-
     </v-dialog>
 
     <v-col :cols="12" :sm="7">
       <h2 class="title mb-2">
-        <strong>Character</strong>
+        <strong>Персонаж</strong>
       </h2>
 
       <v-text-field
-        label="Character Name"
+        label="Имя персонажа"
         :value="characterName"
         dense
         outlined
         @input="setCharacterName"
       />
 
-      <v-text-field
+      <!-- <v-text-field
         :value="customXp"
         class="pb-2"
         label="Additional eXperience Points"
@@ -107,31 +100,20 @@
         ticks
         thumb-label="always"
         @input="setCustomRank"
-      />
-
-
-
+      /> -->
     </v-col>
 
     <v-col :cols="12" :sm="5">
       <div class="mb-2">
-
         <!-- custom avatar -->
-        <v-badge
-          bordered
-          overlap
-          color="error"
-          v-show="characterAvatarUrl"
-        >
+        <v-badge bordered overlap color="error" v-show="characterAvatarUrl">
           <template v-slot:badge>
-            <v-icon color="white" @click.stop="setCharacterAvatar(undefined)">close</v-icon>
+            <v-icon color="white" @click.stop="setCharacterAvatar(undefined)"
+              >close</v-icon
+            >
           </template>
-          <v-avatar
-            size="86"
-            tile
-            @click="selectAvatarDialog = true"
-          >
-            <v-img :src="characterAvatarUrl" ></v-img>
+          <v-avatar size="86" tile @click="selectAvatarDialog = true">
+            <v-img :src="characterAvatarUrl"></v-img>
           </v-avatar>
         </v-badge>
 
@@ -142,27 +124,29 @@
           @click="selectAvatarDialog = true"
           v-show="!characterAvatarUrl"
         >
-          <v-img src="/img/avatar_placeholder_grey.png" ></v-img>
+          <v-img src="/img/avatar_placeholder_grey.png"></v-img>
         </v-avatar>
 
-        <em class="d-none">{{ characterAvatarUrl ? characterAvatarUrl.length : 0 }}</em>
+        <em class="d-none">{{
+          characterAvatarUrl ? characterAvatarUrl.length : 0
+        }}</em>
         <div><a @click="selectAvatarDialog = true">change picture</a></div>
       </div>
     </v-col>
 
     <v-col :cols="12" :sm="7">
-      <h3 class="subtitle-1"><strong>Framework</strong></h3>
-      <p class="body-2">Define your campaign framework.</p>
+      <!-- <h3 class="subtitle-1"><strong>Кампания</strong></h3>
+      <p class="body-2">Определите структуру вашей кампании.</p> -->
 
-      <v-select
+      <!-- <v-select
         label="Select a fitting tier"
         :value="settingTier"
         :items="tierSelect.options"
         dense
         outlined
         @change="setSettingTier"
-      />
-
+      /> -->
+      <!-- 
       <v-text-field
         :value="settingTitle"
         class="pb-2"
@@ -172,12 +156,12 @@
         outlined
         persistent-hint
         @input="setSettingTitle"
-      />
+      /> -->
 
       <v-select
         v-if="false"
         label="Allowed Species"
-        :value="speciesRepository.map( s => s.name )"
+        :value="speciesRepository.map((s) => s.name)"
         :items="speciesRepository"
         item-text="name"
         item-value="name"
@@ -205,10 +189,9 @@
         hint="Select Archetypes that are not allowed to pick."
         persistent-hint
       />
-
     </v-col>
 
-    <v-col :cols="12" :sm="7">
+    <!-- <v-col :cols="12" :sm="7">
       <div>
         <h3 class="subtitle-1"><strong>House Rules</strong></h3>
         <p class="body-2">Allow specific house rules for this character.</p>
@@ -230,27 +213,33 @@
           </div>
         </div>
       </div>
-    </v-col>
+    </v-col> -->
 
     <v-col :cols="12">
       <div>
-
         <h3 class="subtitle-1"><strong>Homebrews</strong></h3>
 
-        <p class="body-2">Allow specific homebrew content to be used for this character.</p>
+        <p class="body-2">
+          Allow specific homebrew content to be used for this character.
+        </p>
 
-        <div v-if="settingHomebrews.includes('aaoa') && settingHomebrews.includes('tea')">
-          <v-alert
-            text border-left dense color="warning" class="caption"
-          >
-            You selected two homebrews, the <em>Abundance of Apocrypha</em> and <em>The Emperors Angels</em>.
-            Both introduce similar Astartes Archetypes, Wargear and Powers.
-            This lead to duplicated entries and thus, <strong>it is NOT recommended to use both</strong> at the same time.
+        <div
+          v-if="
+            settingHomebrews.includes('aaoa') &&
+            settingHomebrews.includes('tea')
+          "
+        >
+          <v-alert text border-left dense color="warning" class="caption">
+            You selected two homebrews, the <em>Abundance of Apocrypha</em> and
+            <em>The Emperors Angels</em>. Both introduce similar Astartes
+            Archetypes, Wargear and Powers. This lead to duplicated entries and
+            thus, <strong>it is NOT recommended to use both</strong> at the same
+            time.
           </v-alert>
         </div>
 
         <div
-          v-for="homebrew in settingHomebrewOptions.filter((h)=>h.enabled)"
+          v-for="homebrew in settingHomebrewOptions.filter((h) => h.enabled)"
           :key="homebrew.key"
         >
           <v-switch
@@ -263,18 +252,27 @@
             :disabled="!homebrew.enabled"
             @change="updateHomebrew(homebrew)"
           >
-            <template v-slot:label><span class="body-2">{{ homebrew.name }}</span></template>
+            <template v-slot:label
+              ><span class="body-2">{{ homebrew.name }}</span></template
+            >
           </v-switch>
         </div>
 
-        <div class="mt-4">
+        <!-- <div class="mt-4">
           <v-alert text border-left dense color="info" class="caption">
-            The <a href="https://www.cubicle7games.com/wrath-glory-pdf-pre-order-live/>">revised edition by Cubicle 7 just came out</a> and thus, most of the homebrews are currently outdated. I have disabled them for now until they are updated to match the recent changes.
+            The
+            <a
+              href="https://www.cubicle7games.com/wrath-glory-pdf-pre-order-live/>"
+              >revised edition by Cubicle 7 just came out</a
+            >
+            and thus, most of the homebrews are currently outdated. I have
+            disabled them for now until they are updated to match the recent
+            changes.
           </v-alert>
-        </div>
+        </div> -->
 
         <div
-          v-for="homebrew in settingHomebrewOptions.filter((h)=>!h.enabled)"
+          v-for="homebrew in settingHomebrewOptions.filter((h) => !h.enabled)"
           :key="homebrew.key"
         >
           <v-switch
@@ -287,7 +285,9 @@
             :disabled="!homebrew.enabled"
             @change="updateHomebrew(homebrew)"
           >
-            <template v-slot:label><span class="body-2">{{ homebrew.name }}</span></template>
+            <template v-slot:label
+              ><span class="body-2">{{ homebrew.name }}</span></template
+            >
           </v-switch>
         </div>
       </div>
@@ -312,7 +312,9 @@
           </h3>
         </v-card-title>
         <v-card-text>
-          <v-subheader>Recommended Tier: {{ item.recommendedTiers }}</v-subheader>
+          <v-subheader
+            >Recommended Tier: {{ item.recommendedTiers }}</v-subheader
+          >
         </v-card-text>
         <v-card-actions>
           <v-btn>Select</v-btn>
@@ -371,114 +373,114 @@ export default {
         { name: 'Black Crusade', recommendedTiers: '3-4', cover: 'https://warhammerart.com/wp-content/uploads/2018/11/13TH-BLACK-CRUSADE-04.jpg' },
       ],
       settingHomebrewOptions: [
+        // {
+        //   active: true,
+        //   key: 'custom',
+        //   name: '\'Your own Custom\' content',
+        //   hint: 'You homebrew species.',
+        //   enabled: true,
+        //   nuxt: '',
+        //   source: '',
+        // },
+        // {
+        //   active: true,
+        //   key: 'tnh',
+        //   name: '\'The Null Hypothesis\' official content',
+        //   hint: 'Add Sisters of Silence and gear.',
+        //   enabled: true,
+        //   nuxt: 'https://www.drivethrurpg.com/product/343894/Wrath--Glory--The-Null-Hypothesis?affiliate_id=466959',
+        //   source: '',
+        // },
+        // {
+        //   active: true,
+        //   key: 'aaoa',
+        //   name: '\'An Abundance of Apocrypha\' content',
+        //   hint: 'Add Human Homeworlds, Squad, Pariah, more is on the way.',
+        //   enabled: true,
+        //   nuxt: '/vault/an-abundance-of-apocrypha',
+        //   source: '',
+        // },
+        // {
+        //   active: true,
+        //   key: 'aotgt',
+        //   name: '\'Agents of the Golden Throne\' content',
+        //   hint: 'Add a Tier 4 Ascension',
+        //   enabled: false,
+        //   nuxt: '/vault/agents-of-the-golden-throne',
+        //   source: 'https://docs.google.com/document/d/1VkOd-WGTXb_Lygm3BQYHX9eC2WzOczsD1kkG3fy4SIg/edit',
+        // },
+        // {
+        //   active: true,
+        //   key: 'pax',
+        //   name: '\'Pax Imperialis\' content',
+        //   hint: 'Add Beastman, Navigators and Untouchables and their respective archetypes.',
+        //   enabled: false,
+        //   nuxt: '/vault/pax-imperialis',
+        //   source: 'https://docs.google.com/document/d/1VkOd-WGTXb_Lygm3BQYHX9eC2WzOczsD1kkG3fy4SIg/edit',
+        // },
+        // {
+        //   active: true,
+        //   key: 'tog',
+        //   name: '\'Tome of Glory\' content',
+        //   hint: 'Add Chaos Archetypes.',
+        //   enabled: true,
+        //   nuxt: '/vault/tome-of-glory',
+        //   source: '',
+        // },
+        // {
+        //   active: true,
+        //   key: 'tea',
+        //   name: '\'The Emperor´s Angels\' content',
+        //   hint: 'Add Space Marine archetypes and Librarius Powers.',
+        //   enabled: false,
+        //   nuxt: '/vault/the-emperors-angels',
+        //   source: '',
+        // },
+        // {
+        //   active: true,
+        //   key: 'lotn',
+        //   name: '\'Legacy of the Necrontyr\' content',
+        //   hint: 'Add Necron species and archetypes.',
+        //   enabled: false,
+        //   nuxt: '/vault/legacy-of-the-necrontyr',
+        //   source: '',
+        // },
+        // {
+        //   active: true,
+        //   key: 'ltgb',
+        //   name: '\'Let the Galaxy Burn\' content',
+        //   hint: 'Add Heretic Astartes Chapters.',
+        //   enabled: false,
+        //   nuxt: '/vault/let-the-galaxy-burn',
+        //   source: '',
+        // },
         {
           active: true,
-          key: 'custom',
-          name: '\'Your own Custom\' content',
-          hint: 'You homebrew species.',
-          enabled: true,
-          nuxt: '',
-          source: '',
-        },
-        {
-          active: true,
-          key: 'tnh',
-          name: '\'The Null Hypothesis\' official content',
-          hint: 'Add Sisters of Silence and gear.',
-          enabled: true,
-          nuxt: 'https://www.drivethrurpg.com/product/343894/Wrath--Glory--The-Null-Hypothesis?affiliate_id=466959',
-          source: '',
-        },
-        {
-          active: true,
-          key: 'aaoa',
-          name: '\'An Abundance of Apocrypha\' content',
-          hint: 'Add Human Homeworlds, Squad, Pariah, more is on the way.',
-          enabled: true,
-          nuxt: '/vault/an-abundance-of-apocrypha',
-          source: '',
-        },
-        {
-          active: true,
-          key: 'aotgt',
-          name: '\'Agents of the Golden Throne\' content',
-          hint: 'Add a Tier 4 Ascension',
-          enabled: false,
-          nuxt: '/vault/agents-of-the-golden-throne',
-          source: 'https://docs.google.com/document/d/1VkOd-WGTXb_Lygm3BQYHX9eC2WzOczsD1kkG3fy4SIg/edit',
-        },
-        {
-          active: true,
-          key: 'pax',
-          name: '\'Pax Imperialis\' content',
-          hint: 'Add Beastman, Navigators and Untouchables and their respective archetypes.',
-          enabled: false,
-          nuxt: '/vault/pax-imperialis',
-          source: 'https://docs.google.com/document/d/1VkOd-WGTXb_Lygm3BQYHX9eC2WzOczsD1kkG3fy4SIg/edit',
-        },
-        {
-          active: true,
-          key: 'tog',
-          name: '\'Tome of Glory\' content',
-          hint: 'Add Chaos Archetypes.',
-          enabled: true,
-          nuxt: '/vault/tome-of-glory',
-          source: '',
-        },
-        {
-          active: true,
-          key: 'tea',
-          name: '\'The Emperor´s Angels\' content',
-          hint: 'Add Space Marine archetypes and Librarius Powers.',
-          enabled: false,
-          nuxt: '/vault/the-emperors-angels',
-          source: '',
-        },
-        {
-          active: true,
-          key: 'lotn',
-          name: '\'Legacy of the Necrontyr\' content',
-          hint: 'Add Necron species and archetypes.',
-          enabled: false,
-          nuxt: '/vault/legacy-of-the-necrontyr',
-          source: '',
-        },
-        {
-          active: true,
-          key: 'ltgb',
-          name: '\'Let the Galaxy Burn\' content',
-          hint: 'Add Heretic Astartes Chapters.',
-          enabled: false,
-          nuxt: '/vault/let-the-galaxy-burn',
-          source: '',
-        },
-        {
-          active: true,
-          key: 'dod',
-          name: '\'Doctors of Doom Sandbox\' content',
-          hint: 'Add Chapter Houses and Roguish Archetypes.',
-          enabled: true,
-          nuxt: undefined,
-          source: '',
-        },
-        {
-          active: true,
-          key: 'gohe',
-          name: '\'Godless Heathens\' content',
-          hint: 'Add Kroot and Jokaero Archetypes.',
+          key: 'rotss',
+          name: 'Рейдеры морей',
+          hint: 'Сеттинг',
           enabled: true,
           nuxt: undefined,
           source: '',
         },
-        {
-          active: true,
-          key: 'soti',
-          name: '\'Shadow of the Imperium Sandbox\' content',
-          hint: 'Highly experimental!',
-          enabled: true,
-          nuxt: undefined,
-          source: '',
-        },
+        // {
+        //   active: true,
+        //   key: 'gohe',
+        //   name: '\'Godless Heathens\' content',
+        //   hint: 'Add Kroot and Jokaero Archetypes.',
+        //   enabled: true,
+        //   nuxt: undefined,
+        //   source: '',
+        // },
+        // {
+        //   active: true,
+        //   key: 'soti',
+        //   name: '\'Shadow of the Imperium Sandbox\' content',
+        //   hint: 'Highly experimental!',
+        //   enabled: true,
+        //   nuxt: undefined,
+        //   source: '',
+        // },
       ],
       enabledHomebrews: [],
       settingHouseruleSelectors: [
@@ -492,16 +494,16 @@ export default {
             { value: 'milestone', text: 'Milestone' },
           ],
         },*/
-        {
-          key: 'skill-attribute-advancement-costs',
-          name: 'Skill & Attribute Advancement Costs Method',
-          hint: 'Use regular advancement costs or legacy (v1) advancement costs, that favour skills.',
-          selected: 'v15',
-          items: [
-            { value: 'v10', text: 'Legacy Flair (Cheaper skills)' },
-            { value: 'v15', text: 'By the book (Revised Rules)' },
-          ],
-        },
+        // {
+        //   key: 'skill-attribute-advancement-costs',
+        //   name: 'Skill & Attribute Advancement Costs Method',
+        //   hint: 'Use regular advancement costs or legacy (v1) advancement costs, that favour skills.',
+        //   selected: 'v15',
+        //   items: [
+        //     { value: 'v10', text: 'Legacy Flair (Cheaper skills)' },
+        //     { value: 'v15', text: 'By the book (Revised Rules)' },
+        //   ],
+        // },
       ],
     };
   },
@@ -592,14 +594,14 @@ export default {
 </script>
 
 <style lang="scss">
-  .croppa-container canvas {
-    border: 0.5px dashed grey;
-  }
+.croppa-container canvas {
+  border: 0.5px dashed grey;
+}
 
-  .text--keyword {
-    color: rgb(244 64 52);
-    font-weight: 600;
-    font-family: serif;
-    text-transform: uppercase;
-  }
+.text--keyword {
+  color: rgb(244 64 52);
+  font-weight: 600;
+  font-family: serif;
+  text-transform: uppercase;
+}
 </style>

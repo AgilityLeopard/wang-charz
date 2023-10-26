@@ -1,23 +1,40 @@
 <template lang="html" xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <div>
-
     <dod-default-breadcrumbs :items="breadcrumbItems" />
 
     <v-row justify="center">
-
       <v-col :cols="12" v-if="false">
         <v-alert type="info" outlined text>
-          On Januar 2021, <a href="https://www.cubicle7games.com/">Cubicle7</a> <a href="https://www.cubicle7games.com/40k-forsaken-system-players-guide-pdf-out-now/">posted about their newest PDF</a> for Wrath and Glory. The can get the <a href="https://www.drivethrurpg.com/product/303930/Wrath--Glory--Forsaken-System-Players-Guide?affiliate_id=466959" title="Wrath & Glory Forsaken System Player´s Guide (Affiliate Link)">Forsaken System Player´s Guide on e.g. drivethrurpg.com</a> (affiliate link). It contains Abhuman Species and new archetypes for the Imperium, covering Sororitas, Inquisition, Mechanicus and Astartes.
+          On Januar 2021, <a href="https://www.cubicle7games.com/">Cubicle7</a>
+          <a
+            href="https://www.cubicle7games.com/40k-forsaken-system-players-guide-pdf-out-now/"
+            >posted about their newest PDF</a
+          >
+          for Wrath and Glory. The can get the
+          <a
+            href="https://www.drivethrurpg.com/product/303930/Wrath--Glory--Forsaken-System-Players-Guide?affiliate_id=466959"
+            title="Wrath & Glory Forsaken System Player´s Guide (Affiliate Link)"
+            >Forsaken System Player´s Guide on e.g. drivethrurpg.com</a
+          >
+          (affiliate link). It contains Abhuman Species and new archetypes for
+          the Imperium, covering Sororitas, Inquisition, Mechanicus and
+          Astartes.
         </v-alert>
       </v-col>
 
       <v-col :cols="12">
         <h2 class="headline">
-          My Characters: <span style="color: #1976d2;">{{ characterSets.filter(i=>i !== undefined).length }} Slots</span>
+          Мои персонажи:
+          <span style="color: #1976d2"
+            >{{
+              characterSets.filter((i) => i !== undefined).length
+            }}
+            Слотов</span
+          >
         </h2>
 
         <v-btn large color="primary" @click="newCharacter">
-          Create a Character
+          Создать персонажа
         </v-btn>
 
         <v-btn large color="primary" outlined @click="importDialog = true">
@@ -36,8 +53,7 @@
           :fullscreen="$vuetify.breakpoint.xsOnly"
         >
           <v-card class="pa-0">
-
-            <v-card-title style="background-color: #262e37; color: #fff;">
+            <v-card-title style="background-color: #262e37; color: #fff">
               <span>Import Character</span>
               <v-spacer />
               <v-icon dark @click="importDialog = false">close</v-icon>
@@ -52,22 +68,24 @@
               ></v-textarea>
             </v-card-text>
             <v-card-actions>
-              <v-btn block color="success" @click="importCharacter(importSnippet)" :disabled="!importSnippet">import</v-btn>
+              <v-btn
+                block
+                color="success"
+                @click="importCharacter(importSnippet)"
+                :disabled="!importSnippet"
+                >import</v-btn
+              >
             </v-card-actions>
           </v-card>
         </v-dialog>
-
       </v-col>
 
       <!-- No Chars yet info text -->
-      <v-col v-if="characterSets.filter(i=>i !== undefined).length <= 0" :cols="12">
-        <v-alert
-          type="info"
-          prominent
-          text
-          border="left"
-          color="primary"
-        >
+      <v-col
+        v-if="characterSets.filter((i) => i !== undefined).length <= 0"
+        :cols="12"
+      >
+        <v-alert type="info" prominent text border="left" color="primary">
           Just hit <strong>Create a Character</strong> and start building.
         </v-alert>
         <v-alert
@@ -80,16 +98,16 @@
         >
           <p>
             <strong>You have been here before and miss your character?</strong>
-            Sadly, to implement the handling of multiple characters, I had to make quite some changes.
-            Migrating existing characters was not achievable without significant effort.
-            So, after some considerations, I decided to skip the migration.
-            However, due to changes within the code, upcoming migrations are feasible.
+            Sadly, to implement the handling of multiple characters, I had to
+            make quite some changes. Migrating existing characters was not
+            achievable without significant effort. So, after some
+            considerations, I decided to skip the migration. However, due to
+            changes within the code, upcoming migrations are feasible.
           </p>
         </v-alert>
       </v-col>
 
       <v-col :cols="12">
-
         <v-alert
           v-if="hasLegacyCharacters"
           color="warning"
@@ -97,58 +115,74 @@
           outlined
         >
           <p>
-            It seems that some of your characters are build with the old (Ulisses) Rules set.
-            The FORGE does not support those characters anymore. I have set up an additional server, where you can manage those characters.
-            That server needs to be awaken from stasis when used, thus it might take up to a minute until it is reachable.
-            To transfer your characters, execute the following steps:
+            It seems that some of your characters are build with the old
+            (Ulisses) Rules set. The FORGE does not support those characters
+            anymore. I have set up an additional server, where you can manage
+            those characters. That server needs to be awaken from stasis when
+            used, thus it might take up to a minute until it is reachable. To
+            transfer your characters, execute the following steps:
           </p>
           <ol>
-            <li>export the characters using the respective button and save (copy to clipboard) the shown text,</li>
-            <li>go to the <a href="https://doctors-of-doom-legacy.herokuapp.com/forge/my-characters" target="_blank">legacy forge</a>,</li>
-            <li>import the character there and check if everything is as expected,</li>
-            <li>if all works like before, consider <strong>deleting</strong> the transfered characters here.</li>
+            <li>
+              export the characters using the respective button and save (copy
+              to clipboard) the shown text,
+            </li>
+            <li>
+              go to the
+              <a
+                href="https://doctors-of-doom-legacy.herokuapp.com/forge/my-characters"
+                target="_blank"
+                >legacy forge</a
+              >,
+            </li>
+            <li>
+              import the character there and check if everything is as expected,
+            </li>
+            <li>
+              if all works like before, consider <strong>deleting</strong> the
+              transfered characters here.
+            </li>
           </ol>
-          <p>Alternatively, just rebuild the character using the new revision. Or, hit delete and never look back.</p>
+          <p>
+            Alternatively, just rebuild the character using the new revision.
+            Or, hit delete and never look back.
+          </p>
         </v-alert>
 
         <v-row justify="center" v-if="hasUnmigratedCharacters">
-
-          <v-col
-            :cols="12"
-            :sm="12"
-            :md="12"
-            :lg="8"
-          >
-
+          <v-col :cols="12" :sm="12" :md="12" :lg="8">
             <v-card>
               <v-card-title>Updates Available</v-card-title>
               <v-card-text>
-                <p>This characters were build with an older version and need to be updated to ensure all fields are up to date. Just hit the <strong>update button</strong> to bring all  characters back in line.</p>
-                <p><strong>This significantly change how ascensions work.</strong> Thus, they are <strong>purged from all characters</strong> including their respective choices. Please <strong>re-select them</strong> after the update.</p>
+                <p>
+                  This characters were build with an older version and need to
+                  be updated to ensure all fields are up to date. Just hit the
+                  <strong>update button</strong> to bring all characters back in
+                  line.
+                </p>
+                <p>
+                  <strong
+                    >This significantly change how ascensions work.</strong
+                  >
+                  Thus, they are
+                  <strong>purged from all characters</strong> including their
+                  respective choices. Please
+                  <strong>re-select them</strong> after the update.
+                </p>
               </v-card-text>
               <v-card-actions>
-                <v-btn
-                  @click="migrateAllCharacters"
-                    color="success"
-                  block
-                >
-                  <v-icon left small>
-                    cloud_upload
-                  </v-icon>
+                <v-btn @click="migrateAllCharacters" color="success" block>
+                  <v-icon left small> cloud_upload </v-icon>
                   Update all Characters
                 </v-btn>
               </v-card-actions>
             </v-card>
-
-
-
           </v-col>
-
         </v-row>
 
         <v-row justify="left">
           <v-col
-            v-for="character in characterSets.filter(i=>i !== undefined)"
+            v-for="character in characterSets.filter((i) => i !== undefined)"
             v-if="characterSets"
             :key="character.id"
             :cols="12"
@@ -156,14 +190,15 @@
             :md="6"
             :lg="4"
           >
-            <v-card
-              v-if="character"
-            >
+            <v-card v-if="character">
               <div class="card">
                 <div class="card__image-container">
                   <div
                     class="card__image"
-                    :style="{ backgroundImage: 'url('+characterAvatar(character.id)+')' }"
+                    :style="{
+                      backgroundImage:
+                        'url(' + characterAvatar(character.id) + ')',
+                    }"
                     loading
                   />
                 </div>
@@ -172,9 +207,7 @@
                   <div class="card__content-container pa-4">
                     <h3>{{ characterName(character.id) }}</h3>
 
-                    <div
-                      v-if="isLegacyVersion(character.id)"
-                    >
+                    <div v-if="isLegacyVersion(character.id)">
                       <v-btn
                         @click="openExportDialog(character.id)"
                         color="warning"
@@ -185,26 +218,33 @@
                       </v-btn>
                     </div>
                     <div
-                      v-else-if="characterVersion(character.id) < builderVersion"
+                      v-else-if="
+                        characterVersion(character.id) < builderVersion
+                      "
                     >
                       <v-btn
                         @click="migrateCharacter(character.id)"
                         color="warning"
                         x-small
                       >
-                        <v-icon left small>
-                          cloud_upload
-                        </v-icon>
-                        Migrate (v{{characterVersion(character.id)}})
+                        <v-icon left small> cloud_upload </v-icon>
+                        Migrate (v{{ characterVersion(character.id) }})
                       </v-btn>
                     </div>
 
                     <div>
-                      <span>{{ characterSpeciesLabel(character.id) }} • {{ characterArchetypeLabel(character.id) }}</span>
+                      <span
+                        >{{ characterSpeciesLabel(character.id) }} •
+                        {{ characterArchetypeLabel(character.id) }}</span
+                      >
                     </div>
 
                     <div>
-                      <span>Rank {{ characterRank(character.id) }} • {{ characterSpendBp(character.id) }} / {{ characterTotalBp(character.id) }} XP</span>
+                      <span
+                        >Rank {{ characterRank(character.id) }} •
+                        {{ characterSpendBp(character.id) }} /
+                        {{ characterTotalBp(character.id) }} XP</span
+                      >
                     </div>
                   </div>
                 </v-card-text>
@@ -213,7 +253,8 @@
               <v-divider />
 
               <v-card-text class="pa-2 card__campaign-container">
-                <strong>Tier {{ characterSettingTier(character.id) }}:</strong> <em>{{ characterSettingTitle(character.id) }}</em>
+                <strong>Tier {{ characterSettingTier(character.id) }}:</strong>
+                <em>{{ characterSettingTitle(character.id) }}</em>
               </v-card-text>
 
               <v-divider />
@@ -227,9 +268,7 @@
                   text
                   :disabled="characterVersion(character.id) < builderVersion"
                 >
-                  <v-icon left small>
-                    edit
-                  </v-icon>
+                  <v-icon left small> edit </v-icon>
                   Edit
                 </v-btn>
                 <v-btn
@@ -240,9 +279,7 @@
                   x-small
                   :disabled="characterVersion(character.id) < builderVersion"
                 >
-                  <v-icon small left>
-                    description
-                  </v-icon>
+                  <v-icon small left> description </v-icon>
                   View
                 </v-btn>
                 <v-btn
@@ -277,7 +314,6 @@
                 >
                   <v-icon small>delete</v-icon>Delete
                 </v-btn>
-
               </v-card-actions>
             </v-card>
           </v-col>
@@ -289,13 +325,10 @@
             :fullscreen="$vuetify.breakpoint.xsOnly"
           >
             <v-card class="pa-0">
-
-              <v-card-title style="background-color: #262e37; color: #fff;">
+              <v-card-title style="background-color: #262e37; color: #fff">
                 <span>Export Character</span>
                 <v-spacer />
-                <v-icon dark @click="exportDialog = false">
-                  close
-                </v-icon>
+                <v-icon dark @click="exportDialog = false"> close </v-icon>
               </v-card-title>
               <v-card-text>
                 <v-textarea
@@ -311,18 +344,16 @@
               </v-card-text>
               <v-divider></v-divider>
               <v-card-actions>
-                <v-btn outlined block color="primary" @click="copyToClipboard"><v-icon>file_copy</v-icon>Copy to clipboard</v-btn>
+                <v-btn outlined block color="primary" @click="copyToClipboard"
+                  ><v-icon>file_copy</v-icon>Copy to clipboard</v-btn
+                >
               </v-card-actions>
             </v-card>
           </v-dialog>
 
-          <v-dialog
-            v-model="deleteDialog"
-            width="350"
-            persistent
-          >
+          <v-dialog v-model="deleteDialog" width="350" persistent>
             <v-card>
-              <v-card-title style="background-color: #262e37; color: #fff;">
+              <v-card-title style="background-color: #262e37; color: #fff">
                 <span>Delete Character confirmation</span>
                 <v-spacer />
                 <v-icon dark @click="deleteDialog = false">close</v-icon>
@@ -334,31 +365,38 @@
               </v-card-text>
               <v-divider></v-divider>
               <v-card-actions>
-                <v-btn block color="primary" @click="deleteCharacter">Delete permanently</v-btn>
+                <v-btn block color="primary" @click="deleteCharacter"
+                  >Delete permanently</v-btn
+                >
               </v-card-actions>
             </v-card>
           </v-dialog>
-
         </v-row>
       </v-col>
 
       <v-col :cols="12">
         <v-card>
           <v-card-text>
-            <h1 class="headline">
-              Character Generator for Wrath and Glory
-            </h1>
+            <h1 class="headline">Character Generator for Wrath and Glory</h1>
             <p>
-              This <strong>online character generator for Wrath & Glory</strong> allows you to create and <strong>organize multiple
-                characters</strong>. Just define a Setting with a fitting Tier and start building.
-              For severe issues, feedback and ideas, reach out to me via
-              <a href="mailto:docsofdoom+forge@gmail.com?subject=Forge Feedback">docsofdoom+forge(at)gmail.com</a>.
+              This
+              <strong>online character generator for Wrath & Glory</strong>
+              allows you to create and
+              <strong>organize multiple characters</strong>. Just define a
+              Setting with a fitting Tier and start building. For severe issues,
+              feedback and ideas, reach out to me via
+              <a href="mailto:docsofdoom+forge@gmail.com?subject=Forge Feedback"
+                >docsofdoom+forge(at)gmail.com</a
+              >.
             </p>
             <p>
-              One last note, the generator is <strong>still missing some features</strong>, e.g. some Talents like <em>Special Weapon Troopes</em>,
-              but the vast majority is working as expected.
-              Still, please consider this a <em>late</em> <strong>BETA</strong> Version, so characters <em>might</em> be deleted (or broken) on future updates.
-              I will try my best to migrate the existing ones to the new version.
+              One last note, the generator is
+              <strong>still missing some features</strong>, e.g. some Talents
+              like <em>Special Weapon Troopes</em>, but the vast majority is
+              working as expected. Still, please consider this a <em>late</em>
+              <strong>BETA</strong> Version, so characters <em>might</em> be
+              deleted (or broken) on future updates. I will try my best to
+              migrate the existing ones to the new version.
             </p>
           </v-card-text>
         </v-card>
@@ -601,44 +639,42 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .card {
+.card {
+  //max-width: 640px;
+  height: 120px;
+  display: flex;
 
-    //max-width: 640px;
-    height: 120px;
-    display: flex;
-
-    &__image-container {
-      width: 120px;
-      min-width: 120px;
-      object-fit: contain;
-      align-self: flex-start;
-    }
-
-    &__image {
-      background-position: center center;
-      background-size: cover;
-      height: 120px;
-      width: 120px;
-    }
-
-    &__content-container {
-      flex: 1 1 auto;
-      //color: rgba(0, 0, 0, 0.54);
-    }
-
-    &__campaign-container {
-      //color: rgba(255, 255, 255, 0.7);
-      //background-color: #424242;
-    }
-
-    &__content-subtitle {
-
-    }
-
-    &__content-footer {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-    }
+  &__image-container {
+    width: 120px;
+    min-width: 120px;
+    object-fit: contain;
+    align-self: flex-start;
   }
+
+  &__image {
+    background-position: center center;
+    background-size: cover;
+    height: 120px;
+    width: 120px;
+  }
+
+  &__content-container {
+    flex: 1 1 auto;
+    //color: rgba(0, 0, 0, 0.54);
+  }
+
+  &__campaign-container {
+    //color: rgba(255, 255, 255, 0.7);
+    //background-color: #424242;
+  }
+
+  &__content-subtitle {
+  }
+
+  &__content-footer {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+  }
+}
 </style>
