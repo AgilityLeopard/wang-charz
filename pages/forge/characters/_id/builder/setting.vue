@@ -64,6 +64,28 @@
         @input="setCharacterName"
       />
 
+      <v-text-field
+        :value="characterLevel"
+        class="pb-2"
+        label="Уровень"
+        hint="Установите уровень персонажа"
+        dense
+        outlined
+        type="number"
+        @input="setLevel"
+      />
+<!-- 
+      <v-text-field
+        :value="characterCustomRank"
+        class="pb-2"
+        label="Rank"
+        hint="Set your Characters Rank, usually between 1-3."
+        dense
+        outlined
+        persistent-hint
+        type="number"
+        @input="setCustomRank"
+      /> -->
       <!-- <v-text-field
         :value="customXp"
         class="pb-2"
@@ -76,17 +98,7 @@
         @input="setCustomXp"
       />
 
-      <v-text-field
-        :value="characterCustomRank"
-        class="pb-2"
-        label="Rank"
-        hint="Set your Characters Rank, usually between 1-3."
-        dense
-        outlined
-        persistent-hint
-        type="number"
-        @input="setCustomRank"
-      />
+
 
       <v-slider
         v-if="false"
@@ -212,8 +224,8 @@
             ></v-select>
           </div>
         </div>
-      </div>
-    </v-col> -->
+      </div>-->
+    </v-col> 
 
     <v-col :cols="12">
       <div>
@@ -327,7 +339,7 @@
 <script lang="js">
 
 export default {
-  name: 'Setting',
+  name: 'Главная',
   layout: 'forge',
   mixins: [],
   props: [],
@@ -342,6 +354,7 @@ export default {
       setting: {
         name: '',
         tier: 3,
+        // level: 1,
         species: { exclude: [] },
         archetypes: { exclude: [] },
         homebrews: [],
@@ -514,6 +527,9 @@ export default {
     characterCustomRank() {
       return this.$store.getters['characters/characterCampaignCustomRankById'](this.characterId);
     },
+    characterLevel() {
+      return this.$store.getters['characters/characterLevelById'](this.characterId);
+    },
     characterAvatarUrl() {
       return this.$store.getters['characters/characterAvatarUrlById'](this.characterId);
     },
@@ -574,7 +590,10 @@ export default {
     setCustomXp(xp) {
       this.$store.commit('characters/setCustomXp', { id: this.characterId, xp });
     },
-    setCustomRank(rank) {
+    setLevel(level) {
+      this.$store.commit('characters/setLevel', { id: this.characterId, level });
+    },
+    setCustomRank(level) {
       this.$store.commit('characters/setCustomRank', { id: this.characterId, rank });
     },
     setSettingTier(tier) {

@@ -1,7 +1,5 @@
 <template lang="html" xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-
   <div>
-
     <!-- Keyword editor -->
     <v-dialog
       v-model="keywordsEditorDialog"
@@ -11,19 +9,19 @@
     >
       <v-form ref="keywordForm" v-model="keywordFormValid">
         <v-card>
-          <v-card-title style="background-color: #262e37; color: #fff;">
+          <v-card-title style="background-color: #262e37; color: #fff">
             Edit Custom Keyword
             <v-spacer />
             <v-icon dark @click="closeKeywordsSettings">close</v-icon>
           </v-card-title>
           <v-card-text class="pt-4">
-
             <v-text-field
               label="Keyword Name"
               v-model="customKeyword.name"
-              dense required
+              dense
+              required
               class="mb-4"
-              :rules="[v => !!v || 'A name is required']"
+              :rules="[(v) => !!v || 'A name is required']"
             ></v-text-field>
 
             <v-textarea
@@ -31,15 +29,29 @@
               v-model="customKeyword.description"
               dense
               class="mb-2"
-              :required="!keywordCombinedRepository.find(k=>k.name===customKeyword.name)"
-              :disabled="keywordCombinedRepository.find(k=>k.name===customKeyword.name)"
+              :required="
+                !keywordCombinedRepository.find(
+                  (k) => k.name === customKeyword.name
+                )
+              "
+              :disabled="
+                keywordCombinedRepository.find(
+                  (k) => k.name === customKeyword.name
+                )
+              "
             ></v-textarea>
-
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer />
-            <v-btn small right color="success" @click="saveCustomKeyword" :disabled="!keywordFormValid">Save</v-btn>
+            <v-btn
+              small
+              right
+              color="success"
+              @click="saveCustomKeyword"
+              :disabled="!keywordFormValid"
+              >Save</v-btn
+            >
           </v-card-actions>
         </v-card>
       </v-form>
@@ -53,25 +65,37 @@
       :fullscreen="$vuetify.breakpoint.xsOnly"
     >
       <v-card>
-        <v-card-title style="background-color: #262e37; color: #fff;">
+        <v-card-title style="background-color: #262e37; color: #fff">
           Edit Custom Skill
           <v-spacer />
           <v-icon dark @click="closeSkillsSettings">close</v-icon>
         </v-card-title>
         <v-card-text class="pt-4">
-          <v-text-field v-model="customSkill.name" dense label="Skill Name"></v-text-field>
+          <v-text-field
+            v-model="customSkill.name"
+            dense
+            label="Skill Name"
+          ></v-text-field>
           <v-select
             v-model="customSkill.attribute"
             :items="attributeRepository"
-            item-value="name" item-text="name"
-            dense label="Accosiated Attribute"
+            item-value="name"
+            item-text="name"
+            dense
+            label="Accosiated Attribute"
           ></v-select>
-          <v-textarea v-model="customSkill.description" dense label="Description"></v-textarea>
+          <v-textarea
+            v-model="customSkill.description"
+            dense
+            label="Description"
+          ></v-textarea>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer />
-          <v-btn small right color="success" @click="saveCustomSkill">Save</v-btn>
+          <v-btn small right color="success" @click="saveCustomSkill"
+            >Save</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -85,28 +109,30 @@
     >
       <dod-corruption-manager
         :id="characterId"
-        :corruption="traits.find((t)=>t.key==='corruption').adjustedRating"
-        :modifiers="characterEnhancements.filter((e) => e.targetValue === 'corruption')"
+        :corruption="traits.find((t) => t.key === 'corruption').adjustedRating"
+        :modifiers="
+          characterEnhancements.filter((e) => e.targetValue === 'corruption')
+        "
         @cancel="showCorruptionManagerDialog = false"
       ></dod-corruption-manager>
     </v-dialog>
 
     <!-- Wealth -->
     <v-dialog
-        v-model="showContextDialog"
-        width="800px"
-        scrollable
-        :fullscreen="$vuetify.breakpoint.xsOnly"
+      v-model="showContextDialog"
+      width="800px"
+      scrollable
+      :fullscreen="$vuetify.breakpoint.xsOnly"
     >
       <v-card>
         <component
-            v-if="contextDialogComponent"
-            :is="contextDialogComponent"
-            :character-id="characterId"
-            :character-traits="traits"
-            :character-modifiers="characterEnhancements"
-            :trait-key="contextDialogTraitKey"
-            @cancel="hideContextDialog"
+          v-if="contextDialogComponent"
+          :is="contextDialogComponent"
+          :character-id="characterId"
+          :character-traits="traits"
+          :character-modifiers="characterEnhancements"
+          :trait-key="contextDialogTraitKey"
+          @cancel="hideContextDialog"
         ></component>
       </v-card>
     </v-dialog>
@@ -114,10 +140,9 @@
     <dod-default-breadcrumbs :items="breadcrumbItems" />
 
     <v-row justify="center" align="center">
-
       <v-col :cols="3" :sm="2" :md="1">
         <v-avatar tile size="64">
-          <img :src="avatar" >
+          <img :src="avatar" />
         </v-avatar>
       </v-col>
 
@@ -125,14 +150,28 @@
       <v-col :cols="8" :sm="6" :md="6">
         <v-row no-gutters>
           <v-col :cols="12">{{ characterName }}</v-col>
-          <v-col :cols="12" class="caption">{{ [ archetypeLabel, speciesLabel ].join(' • ')  }}</v-col>
+          <v-col :cols="12" class="caption">{{
+            [archetypeLabel, speciesLabel].join(" • ")
+          }}</v-col>
           <v-col :cols="12" class="caption">
-            <span>{{ [ `Tier ${characterSettingTier}`, `Rank ${characterRank}`, `${campaignCustomXp} XP`].join(' • ') }}</span>
+            <span>{{
+              [
+                `Тир ${characterSettingTier}`,
+                `Rank ${characterRank}`,
+                `${campaignCustomXp} XP`,
+              ].join(" • ")
+            }}</span>
           </v-col>
           <v-col :cols="12" class="caption">
-            <v-progress-linear :value="campaignCustomXp" height="2" color="red"></v-progress-linear>
+            <v-progress-linear
+              :value="campaignCustomXp"
+              height="2"
+              color="red"
+            ></v-progress-linear>
           </v-col>
-          <v-col :cols="12" class="caption text--keyword" align="center">{{ keywordStrings.join(' • ') }}</v-col>
+          <v-col :cols="12" class="caption text--keyword" align="center">{{
+            keywordStrings.join(" • ")
+          }}</v-col>
         </v-row>
       </v-col>
 
@@ -143,25 +182,24 @@
         <v-btn small outlined color="primary" v-if="false">
           <v-icon left small>group</v-icon> Regroup
         </v-btn>
-        <v-btn
-          color="primary"
-          outlined small
-          @click="doRespite"
-        >
+        <v-btn color="primary" outlined small @click="doRespite">
           <v-icon left small>fireplace</v-icon>
           Respite
         </v-btn>
         <v-btn
-          nuxt :to="`/forge/characters/${characterId}/builder/print`"
+          nuxt
+          :to="`/forge/characters/${characterId}/builder/print`"
           color="success"
           target="_blank"
-          outlined small
+          outlined
+          small
         >
           <v-icon left small>print</v-icon>
           Print
         </v-btn>
         <v-btn
-          nuxt :to="`/forge/characters/${characterId}/builder/setting`"
+          nuxt
+          :to="`/forge/characters/${characterId}/builder/setting`"
           color="success"
           small
         >
@@ -169,232 +207,319 @@
           Edit
         </v-btn>
       </v-col>
-
     </v-row>
 
     <v-row justify="center" no-gutters>
-
       <!-- attributes and traits -->
-      <v-col :cols="12" :sm="6" :md="6" :lg="3" >
-
+      <v-col :cols="12" :sm="6" :md="6" :lg="3">
         <v-row no-gutters>
-         <v-col :cols="12" class="pa-1">
-          <v-card>
-            <v-card-title style="background-color: hsl(4, 90%, 58%); color: #fff;" class="body-1 pt-1 pb-1">
-              <h2 class="subtitle-1">Attributes</h2>
-            </v-card-title>
+          <v-col :cols="12" class="pa-1">
+            <v-card>
+              <v-card-title
+                style="background-color: hsl(4, 90%, 58%); color: #fff"
+                class="body-1 pt-1 pb-1"
+              >
+                <h2 class="subtitle-1">Attributes</h2>
+              </v-card-title>
 
-            <v-simple-table dense>
-              <thead>
-                <tr>
-                  <th v-for="header in attributeHeaders" :class="header.class">
-                    {{ header.text }}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-              <tr v-for="item in attributes" :key="item.key">
-                <td class="text-left pa-1 small">{{ item.name }}</td>
-                <td class="text-center pa-1 small">{{ item.rating }}</td>
-                <td class="text-center pa-1 small">{{ item.adjustedRating }}</td>
-                <td class="text-center pa-1 small">
-                  <v-tooltip bottom v-if="item.modifiers.length > 0">
-                    <template v-slot:activator="{ on }">
-                      <v-avatar
-                        :color="valueHintColor(item)"
-                        size="12"
-                        v-on="on"
-                      >
-                        <v-icon dark small>{{valueHintIcon(item)}}</v-icon>
-                      </v-avatar>
-                    </template>
-                    <div v-for="(modifier, index) in item.modifiers" :key="index">{{modifier}}</div>
-                  </v-tooltip>
-                </td>
-              </tr>
-              </tbody>
-            </v-simple-table>
-          </v-card>
-        </v-col>
+              <v-simple-table dense>
+                <thead>
+                  <tr>
+                    <th
+                      v-for="header in attributeHeaders"
+                      :class="header.class"
+                    >
+                      {{ header.text }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="item in attributes" :key="item.key">
+                    <td class="text-left pa-1 small">{{ item.name }}</td>
+                    <td class="text-center pa-1 small">{{ item.rating }}</td>
+                    <td class="text-center pa-1 small">
+                      {{ item.adjustedRating }}
+                    </td>
+                    <td class="text-center pa-1 small">
+                      <v-tooltip bottom v-if="item.modifiers.length > 0">
+                        <template v-slot:activator="{ on }">
+                          <v-avatar
+                            :color="valueHintColor(item)"
+                            size="12"
+                            v-on="on"
+                          >
+                            <v-icon dark small>{{
+                              valueHintIcon(item)
+                            }}</v-icon>
+                          </v-avatar>
+                        </template>
+                        <div
+                          v-for="(modifier, index) in item.modifiers"
+                          :key="index"
+                        >
+                          {{ modifier }}
+                        </div>
+                      </v-tooltip>
+                    </td>
+                  </tr>
+                </tbody>
+              </v-simple-table>
+            </v-card>
+          </v-col>
         </v-row>
 
         <v-row no-gutters>
           <v-col :cols="12" class="pa-1">
-          <v-card>
-            <v-card-title style="background-color: hsl(4, 90%, 58%); color: #fff;" class="body-1 pt-1 pb-1">
-              <h2 class="subtitle-1">Traits</h2>
-            </v-card-title>
+            <v-card>
+              <v-card-title
+                style="background-color: hsl(4, 90%, 58%); color: #fff"
+                class="body-1 pt-1 pb-1"
+              >
+                <h2 class="subtitle-1">Traits</h2>
+              </v-card-title>
 
-            <v-simple-table
-              :headers="traitHeaders"
-              :items="groupedTraits"
-              dense
-            >
-              <tbody>
-                <tr v-for="item in groupedTraits">
-                  <td class="text-left pa-1 small">
-                    <span>
-                      {{ item.name }}
-                    </span>
-                    <span v-if="['Corruption'].includes(item.name)">
-                      <v-btn x-small icon @click="showCorruptionManagerDialog = true">
-                        <v-hover>
-                          <v-icon
-                            slot-scope="{ hover }"
-                            :color="`${ hover ? 'primary' : '' }`"
-                          >settings</v-icon>
-                        </v-hover>
-                      </v-btn>
-                    </span>
-                    <span v-if="['Wealth', 'Influence'].includes(item.name)">
-                      <v-btn x-small icon @click="showContext(item.key)">
-                        <v-hover>
-                          <v-icon
+              <v-simple-table
+                :headers="traitHeaders"
+                :items="groupedTraits"
+                dense
+              >
+                <tbody>
+                  <tr v-for="item in groupedTraits">
+                    <td class="text-left pa-1 small">
+                      <span>
+                        {{ item.name }}
+                      </span>
+                      <span v-if="['Corruption'].includes(item.name)">
+                        <v-btn
+                          x-small
+                          icon
+                          @click="showCorruptionManagerDialog = true"
+                        >
+                          <v-hover>
+                            <v-icon
                               slot-scope="{ hover }"
-                              :color="`${ hover ? 'primary' : '' }`"
-                          >settings</v-icon>
-                        </v-hover>
-                      </v-btn>
-                    </span>
-                    <div v-if="['Wealth','Max Shock','Max Wounds'].includes(item.name)" style="float: right;">
-                      <div style="flex-wrap: wrap; display: flex;" v-if="item.adjustedRating > 0">
+                              :color="`${hover ? 'primary' : ''}`"
+                              >settings</v-icon
+                            >
+                          </v-hover>
+                        </v-btn>
+                      </span>
+                      <span v-if="['Wealth', 'Influence'].includes(item.name)">
+                        <v-btn x-small icon @click="showContext(item.key)">
+                          <v-hover>
+                            <v-icon
+                              slot-scope="{ hover }"
+                              :color="`${hover ? 'primary' : ''}`"
+                              >settings</v-icon
+                            >
+                          </v-hover>
+                        </v-btn>
+                      </span>
+                      <div
+                        v-if="
+                          ['Wealth', 'Max Shock', 'Max Wounds'].includes(
+                            item.name
+                          )
+                        "
+                        style="float: right"
+                      >
+                        <div
+                          style="flex-wrap: wrap; display: flex"
+                          v-if="item.adjustedRating > 0"
+                        >
                           <div
                             v-for="pointIndex in item.adjustedRating"
                             class="resource-box"
-                            :class="{ 'resource-box--filled': pointIndex <= item.spend }"
+                            :class="{
+                              'resource-box--filled': pointIndex <= item.spend,
+                            }"
                             @click="toggleResource(item, pointIndex)"
                           ></div>
                         </div>
-                    </div>
-                  </td>
-                  <td class="text-center pa-1 small">
-                    {{ item.adjustedRating }}<span v-if="item.alternativeRating">/{{ item.alternativeRating }}</span><span v-if="item.conditionalAdjustment !== 0">/{{ item.adjustedRating+item.conditionalAdjustment }}</span>
-                  </td>
-                  <td>
-                    <!-- each modifier contains the BASE of the compution, thus we begin at > 1 -->
-                    <v-tooltip bottom v-if="item.modifiers.length > 0 || item.alternativeRating">
-                      <template v-slot:activator="{ on }">
-                        <v-avatar
-                          :color="valueHintColor(item)"
-                          size="12"
-                          v-on="on"
+                      </div>
+                    </td>
+                    <td class="text-center pa-1 small">
+                      {{ item.adjustedRating
+                      }}<span v-if="item.alternativeRating"
+                        >/{{ item.alternativeRating }}</span
+                      ><span v-if="item.conditionalAdjustment !== 0"
+                        >/{{
+                          item.adjustedRating + item.conditionalAdjustment
+                        }}</span
+                      >
+                    </td>
+                    <td>
+                      <!-- each modifier contains the BASE of the compution, thus we begin at > 1 -->
+                      <v-tooltip
+                        bottom
+                        v-if="
+                          item.modifiers.length > 0 || item.alternativeRating
+                        "
+                      >
+                        <template v-slot:activator="{ on }">
+                          <v-avatar
+                            :color="valueHintColor(item)"
+                            size="12"
+                            v-on="on"
+                          >
+                            <v-icon dark small>{{
+                              valueHintIcon(item)
+                            }}</v-icon>
+                          </v-avatar>
+                        </template>
+                        <div>{{ item.baseHelp }}</div>
+                        <div
+                          v-for="modifier in item.modifiers.filter(
+                            (m) => m.condition === null
+                          )"
                         >
-                          <v-icon dark small>{{valueHintIcon(item)}}</v-icon>
-                        </v-avatar>
-                      </template>
-                      <div>{{item.baseHelp}}</div>
-                      <div v-for="modifier in item.modifiers.filter((m) => m.condition === null)">
-                        {{modifier.valueString}} • {{modifier.provider}} ({{modifier.category}})
-                      </div>
-                      <div v-if="item.modifiers.find((m) => m.condition !== null)">
-                        <div><strong>Conditional modifiers:</strong></div>
-                        <div v-for="modifier in item.modifiers.filter((m) => m.condition !== null)">
-                          {{modifier.valueString}} {{modifier.condition}} • {{modifier.provider}} ({{modifier.category}})
+                          {{ modifier.valueString }} •
+                          {{ modifier.provider }} ({{ modifier.category }})
                         </div>
-                      </div>
-                    </v-tooltip>
-                  </td>
-                </tr>
-              </tbody>
-
-            </v-simple-table>
-
-          </v-card>
-        </v-col>
+                        <div
+                          v-if="
+                            item.modifiers.find((m) => m.condition !== null)
+                          "
+                        >
+                          <div><strong>Conditional modifiers:</strong></div>
+                          <div
+                            v-for="modifier in item.modifiers.filter(
+                              (m) => m.condition !== null
+                            )"
+                          >
+                            {{ modifier.valueString }}
+                            {{ modifier.condition }} •
+                            {{ modifier.provider }} ({{ modifier.category }})
+                          </div>
+                        </div>
+                      </v-tooltip>
+                    </td>
+                  </tr>
+                </tbody>
+              </v-simple-table>
+            </v-card>
+          </v-col>
         </v-row>
-
       </v-col>
 
       <!-- skills -->
       <v-col :cols="12" :sm="6" :md="6" :lg="3">
         <v-row no-gutters>
           <v-col :cols="12" class="pa-1">
-          <v-card style="height: 755px; display: flex; flex-flow: column;">
-            <v-card-title style="background-color: hsl(4, 90%, 58%); color: #fff;" class="body-1 pt-1 pb-1">
-              <h2 class="subtitle-1">Skills</h2>
-            </v-card-title>
+            <v-card style="height: 755px; display: flex; flex-flow: column">
+              <v-card-title
+                style="background-color: hsl(4, 90%, 58%); color: #fff"
+                class="body-1 pt-1 pb-1"
+              >
+                <h2 class="subtitle-1">Skills</h2>
+              </v-card-title>
 
-            <v-simple-table
-              dense
-              style="overflow-y: auto"
-            >
-              <thead>
-              <tr>
-                <th v-for="header in skillHeaders" :class="header.class">
-                  {{ header.text }}
-                </th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="item in skills">
-                <td class="text-left pa-1 small">
-                  {{ item.name }}
-                  <span v-if="item.custom">
-                    <v-hover>
-                      <v-icon
-                        small
-                        @click="removeCustomSkill(item.key)"
-                        slot-scope="{ hover }"
-                        :color="`${ hover ? 'error' : '' }`"
-                      >delete</v-icon>
-                    </v-hover>
-                  </span>
-                </td>
-                <td class="text-center pa-1 small">
-                  {{ item.value }}
-                </td>
-                <td class="text-center pa-1 small">
-                  <span v-if="item.attribute">
-                    {{ item.attribute.substring(0,3) }}
-                  </span>
-                </td>
-                <td class="text-center pa-1 small">
-                  {{ computeSkillPool(item) }}<span v-if="item.conditionalAdjustment !== 0">/{{ computeSkillPool(item)+item.conditionalAdjustment }}</span>
-                </td>
-                <td class="text-center pa-1 small">
-                  <v-tooltip bottom v-if="item.modifiers.length > 0">
-                    <template v-slot:activator="{ on }">
-                      <v-avatar
-                        :color="valueHintColor(item)"
-                        size="12"
-                        v-on="on"
+              <v-simple-table dense style="overflow-y: auto">
+                <thead>
+                  <tr>
+                    <th v-for="header in skillHeaders" :class="header.class">
+                      {{ header.text }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="item in skills">
+                    <td class="text-left pa-1 small">
+                      {{ item.name }}
+                      <span v-if="item.custom">
+                        <v-hover>
+                          <v-icon
+                            small
+                            @click="removeCustomSkill(item.key)"
+                            slot-scope="{ hover }"
+                            :color="`${hover ? 'error' : ''}`"
+                            >delete</v-icon
+                          >
+                        </v-hover>
+                      </span>
+                    </td>
+                    <td class="text-center pa-1 small">
+                      {{ item.adjustedAttributeValue }}
+                    </td>
+                    <td class="text-center pa-1 small">
+                      <span v-if="item.attribute">
+                        {{ item.attribute.substring(0, 3) }}
+                      </span>
+                    </td>
+                    <td class="text-center pa-1 small">
+                      {{ computeSkillPool(item)
+                      }}<span v-if="item.conditionalAdjustment !== 0"
+                        >/{{
+                          computeSkillPool(item) + item.conditionalAdjustment
+                        }}</span
                       >
-                        <v-icon dark small>{{valueHintIcon(item)}}</v-icon>
-                      </v-avatar>
-                    </template>
-                    <div>Pool {{ item.rating + item.adjustedAttributeValue }} = Skill ({{item.rating}}) + {{item.attributeObject.name}} ({{item.attributeObject.adjustedRating}})</div>
-                    <div v-for="modifier in item.modifiers.filter((m) => m.condition === null)">
-                      {{modifier.valueString}} • {{modifier.provider}} ({{modifier.category}})
-                    </div>
-                    <div v-if="item.modifiers.find((m) => m.condition !== null)">
-                      <div><strong>Conditional modifiers:</strong></div>
-                      <div v-for="modifier in item.modifiers.filter((m) => m.condition !== null)">
-                        {{modifier.valueString}} {{modifier.condition}} • {{modifier.provider}} ({{modifier.category}})
-                      </div>
-                    </div>
-                  </v-tooltip>
-                </td>
-              </tr>
-              </tbody>
-            </v-simple-table>
+                    </td>
+                    <td class="text-center pa-1 small">
+                      <v-tooltip bottom v-if="item.modifiers.length > 0">
+                        <template v-slot:activator="{ on }">
+                          <v-avatar
+                            :color="valueHintColor(item)"
+                            size="12"
+                            v-on="on"
+                          >
+                            <v-icon dark small>{{
+                              valueHintIcon(item)
+                            }}</v-icon>
+                          </v-avatar>
+                        </template>
+                        <div>
+                          Pool {{ item.rating + item.adjustedAttributeValue }} =
+                          Skill ({{ item.rating }}) +
+                          {{ item.attributeObject.name }} ({{
+                            item.attributeObject.adjustedRating
+                          }})
+                        </div>
+                        <div
+                          v-for="modifier in item.modifiers.filter(
+                            (m) => m.condition === null
+                          )"
+                        >
+                          {{ modifier.valueString }} •
+                          {{ modifier.provider }} ({{ modifier.category }})
+                        </div>
+                        <div
+                          v-if="
+                            item.modifiers.find((m) => m.condition !== null)
+                          "
+                        >
+                          <div><strong>Conditional modifiers:</strong></div>
+                          <div
+                            v-for="modifier in item.modifiers.filter(
+                              (m) => m.condition !== null
+                            )"
+                          >
+                            {{ modifier.valueString }}
+                            {{ modifier.condition }} •
+                            {{ modifier.provider }} ({{ modifier.category }})
+                          </div>
+                        </div>
+                      </v-tooltip>
+                    </td>
+                  </tr>
+                </tbody>
+              </v-simple-table>
 
-            <v-spacer></v-spacer>
+              <v-spacer></v-spacer>
 
-            <v-card-actions style="justify-content: center;">
-              <v-btn x-small text @click="openSkillsSettings">Additional Skill <v-icon small>settings</v-icon></v-btn>
-            </v-card-actions>
-
+              <v-card-actions style="justify-content: center">
+                <v-btn x-small text @click="openSkillsSettings"
+                  >Additional Skill <v-icon small>settings</v-icon></v-btn
+                >
+              </v-card-actions>
             </v-card>
           </v-col>
         </v-row>
       </v-col>
 
       <!-- actions, gear, feats, spells, ... -->
-      <v-col :cols="12" :sm="12" :md="12" :lg="6" class="pa-1 ">
+      <v-col :cols="12" :sm="12" :md="12" :lg="6" class="pa-1">
         <v-card>
-
           <v-tabs centered grow color="red">
-
             <!--  DNDBYOND
               Actions
                 All, Attack, Action, Bonus Action, Reaction, Others, Limited Use
@@ -429,11 +554,28 @@
 
             -->
 
-            <v-tab class="caption" key="actions" :href="`#tab-actions`"><h2 class="subtitle-2">Weapons</h2></v-tab>
-            <v-tab class="caption" key="wargear" :href="`#tab-wargear`"><h2 class="subtitle-2">Wargear</h2></v-tab>
-            <v-tab class="caption" key="abilities-talents" :href="`#tab-abilities-talents`"><h2 class="subtitle-2">Abilities</h2></v-tab>
-            <v-tab class="caption" key="psychic-powers" :href="`#tab-psychic-powers`" v-if="psychicPowers.length > 0"><h2 class="subtitle-2">Powers</h2></v-tab>
-            <v-tab class="caption" key="objectives" :href="`#tab-objectives`"><h2 class="subtitle-2">Description</h2></v-tab>
+            <v-tab class="caption" key="actions" :href="`#tab-actions`"
+              ><h2 class="subtitle-2">Weapons</h2></v-tab
+            >
+            <v-tab class="caption" key="wargear" :href="`#tab-wargear`"
+              ><h2 class="subtitle-2">Wargear</h2></v-tab
+            >
+            <v-tab
+              class="caption"
+              key="abilities-talents"
+              :href="`#tab-abilities-talents`"
+              ><h2 class="subtitle-2">Abilities</h2></v-tab
+            >
+            <v-tab
+              class="caption"
+              key="psychic-powers"
+              :href="`#tab-psychic-powers`"
+              v-if="psychicPowers.length > 0"
+              ><h2 class="subtitle-2">Powers</h2></v-tab
+            >
+            <v-tab class="caption" key="objectives" :href="`#tab-objectives`"
+              ><h2 class="subtitle-2">Description</h2></v-tab
+            >
 
             <!-- actions (all, weapons, powers, other) -->
             <v-tab-item
@@ -442,7 +584,6 @@
               :value="`tab-actions`"
             >
               <div class="pa-2">
-
                 <v-data-table
                   :headers="weaponHeaders"
                   :items="weapons"
@@ -450,33 +591,52 @@
                 >
                   <template v-slot:item="{ item }">
                     <tr
-                        v-if="item.meta"
-                        v-for="(meta, metaIndex) in item.meta.filter(m => m.type.indexOf('-weapon') > 0)"
-                        :key="`${item.name}-${metaIndex}`"
+                      v-if="item.meta"
+                      v-for="(meta, metaIndex) in item.meta.filter(
+                        (m) => m.type.indexOf('-weapon') > 0
+                      )"
+                      :key="`${item.name}-${metaIndex}`"
                     >
-
                       <td class="text-left pa-1 small">
                         {{ item.name }}
                         <template v-if="item.meta.length > 1">
-                          <span v-if="meta.type === 'melee-weapon'">(Melee)</span>
-                          <span v-else-if="meta.type === 'ranged-weapon'">(Ranged)</span>
+                          <span v-if="meta.type === 'melee-weapon'"
+                            >(Melee)</span
+                          >
+                          <span v-else-if="meta.type === 'ranged-weapon'"
+                            >(Ranged)</span
+                          >
                         </template>
                       </td>
 
                       <td class="text-center pa-1 small">
                         <span v-if="meta.range > 4">
-                          {{ meta.range/2 }} | {{ meta.range }} | {{ meta.range*1.5 }}
+                          {{ meta.range / 2 }} | {{ meta.range }} |
+                          {{ meta.range * 1.5 }}
                         </span>
-                        <span v-else-if="meta.range > 1">{{ meta.range }} m</span>
+                        <span v-else-if="meta.range > 1"
+                          >{{ meta.range }} m</span
+                        >
                         <span v-if="meta.range === 1">melee</span>
-                        <span v-if="isNaN(meta.range) && meta.range.startsWith('STRx')">{{meta.range}}</span>
+                        <span
+                          v-if="
+                            isNaN(meta.range) && meta.range.startsWith('STRx')
+                          "
+                          >{{ meta.range }}</span
+                        >
                       </td>
 
                       <td class="text-center pa-1 small">
                         <div v-if="meta.damage">
                           <div v-if="meta.damage.static === '*'">*</div>
                           <div v-else>
-                            <span v-if="meta.type==='melee-weapon'">{{ meta.damage.static + attributes.find((a)=>a.key==='strength').adjustedRating }}*</span>
+                            <span v-if="meta.type === 'melee-weapon'"
+                              >{{
+                                meta.damage.static +
+                                attributes.find((a) => a.key === "strength")
+                                  .adjustedRating
+                              }}*</span
+                            >
                             <span v-else>{{ meta.damage.static }}</span>
                             <span> + </span>
                             <span>{{ meta.damage.ed }} ED</span>
@@ -489,29 +649,44 @@
                       </td>
 
                       <td class="text-center pa-1 small">
-                        <span>{{ isNaN(meta.salvo) ? '-' : meta.salvo }}</span>
+                        <span>{{ isNaN(meta.salvo) ? "-" : meta.salvo }}</span>
                       </td>
 
                       <td class="text-left pa-1 small">
-                        <span v-if="meta.traits && meta.traits.length >0">{{ meta.traits.join(', ') }}</span>
+                        <span v-if="meta.traits && meta.traits.length > 0">{{
+                          meta.traits.join(", ")
+                        }}</span>
                         <span v-else>-</span>
                       </td>
-
                     </tr>
                   </template>
                 </v-data-table>
 
                 <div class="mb-1 mt-2">
                   <span class="body-2 red--text">Reloads:</span>
-                  <span class="body-2">{{ characterReloads.points - characterReloads.spend }} remaining.</span>
-                  <div class="pl-2" style="flex-wrap: wrap; display: flex;" v-if="characterReloads.points > 0">
+                  <span class="body-2"
+                    >{{
+                      characterReloads.points - characterReloads.spend
+                    }}
+                    remaining.</span
+                  >
+                  <div
+                    class="pl-2"
+                    style="flex-wrap: wrap; display: flex"
+                    v-if="characterReloads.points > 0"
+                  >
                     <v-btn
-                      text icon
+                      text
+                      icon
                       v-for="pointIndex in characterReloads.points"
                       :key="pointIndex"
                       @click="toggleResourceReloads(pointIndex)"
                     >
-                      <v-icon color="error" v-if="pointIndex <= characterReloads.spend">signal_cellular_no_sim</v-icon>
+                      <v-icon
+                        color="error"
+                        v-if="pointIndex <= characterReloads.spend"
+                        >signal_cellular_no_sim</v-icon
+                      >
                       <v-icon color="primary" v-else>sd_storage</v-icon>
                     </v-btn>
                   </div>
@@ -525,7 +700,8 @@
                     class="body-2 mb-2 caption"
                   >
                     <p v-if="traitByName(trait).crunch">
-                      <strong>{{ traitByName(trait).name }}: </strong> {{ traitByName(trait).crunch }}
+                      <strong>{{ traitByName(trait).name }}: </strong>
+                      {{ traitByName(trait).crunch }}
                     </p>
                     <p v-else>{{ traitByName(trait).description }}</p>
                   </div>
@@ -540,25 +716,40 @@
               :value="`tab-wargear`"
             >
               <div class="pa-2 pt-1 pb-1">
-                <div v-for="gearItem in wargear" :key="gearItem.id" class="caption mb-2">
-                  <div v-if="gearItem.variant" style="display: inline;">
-                    <strong >{{ gearItem.variant }}</strong>
+                <div
+                  v-for="gearItem in wargear"
+                  :key="gearItem.id"
+                  class="caption mb-2"
+                >
+                  <div v-if="gearItem.variant" style="display: inline">
+                    <strong>{{ gearItem.variant }}</strong>
                     <span> ({{ gearItem.name }})</span>
                   </div>
                   <strong v-else>{{ gearItem.name }}</strong>
-                  <em v-if="gearItem.type"> • {{gearItem.type}}</em>
+                  <em v-if="gearItem.type"> • {{ gearItem.type }}</em>
                   <span v-if="gearItem.source">
-                    <em v-if="gearItem.source.key"> • {{ gearItem.source.key }}</em><em v-if="!isNaN(gearItem.source.page)">, pg. {{ gearItem.source.page }}</em>
+                    <em v-if="gearItem.source.key">
+                      • {{ gearItem.source.key }}</em
+                    ><em v-if="!isNaN(gearItem.source.page)"
+                      >, pg. {{ gearItem.source.page }}</em
+                    >
                   </span>
 
-                  <p class="mb-1" v-if="gearItem.snippet">{{ gearItem.snippet }}</p>
+                  <p class="mb-1" v-if="gearItem.snippet">
+                    {{ gearItem.snippet }}
+                  </p>
                   <div class="mb-1" v-else v-html="gearItem.description"></div>
 
                   <div
-                    v-if="gearItem.meta !== undefined && gearItem.meta.length > 0 && ['armour'].includes(gearItem.meta[0].type)"
+                    v-if="
+                      gearItem.meta !== undefined &&
+                      gearItem.meta.length > 0 &&
+                      ['armour'].includes(gearItem.meta[0].type)
+                    "
                   >
                     <p
-                      class="ml-1 pl-2 mb-1" style="border-left: solid 3px lightgrey;"
+                      class="ml-1 pl-2 mb-1"
+                      style="border-left: solid 3px lightgrey"
                       v-for="trait in gearItem.meta[0].traits"
                       v-if="traitByName(trait, true)"
                       :key="trait"
@@ -567,9 +758,7 @@
                       {{ traitByName(trait, true).crunch }}
                     </p>
                   </div>
-
                 </div>
-
               </div>
             </v-tab-item>
 
@@ -580,185 +769,376 @@
               :value="`tab-abilities-talents`"
             >
               <div class="pa-2">
-
-                <v-chip-group mandatory active-class="red--text" v-model="abilitySection.selection">
+                <v-chip-group
+                  mandatory
+                  active-class="red--text"
+                  v-model="abilitySection.selection"
+                >
                   <v-chip
                     label
                     small
-                    v-for="item in [`All`,`Species`, `Archetype`, `Ascension`, `Talents`, `Other`]"
+                    v-for="item in [
+                      `All`,
+                      `Species`,
+                      `Archetype`,
+                      `Ascension`,
+                      `Talents`,
+                      `Other`,
+                    ]"
                     :key="item.toLowerCase()"
                     :value="item.toLowerCase()"
                   >
-                    {{item}}
+                    {{ item }}
                   </v-chip>
                 </v-chip-group>
 
-                <div style="height: 505px; overflow-y: auto;">
-
+                <div style="height: 505px; overflow-y: auto">
                   <!-- species < abilities -->
-                  <div v-show="abilitySection.selection === 'species' || (abilitySection.selection === 'all' && speciesAbilities.length > 0 )">
-                    <div class="mb-1" style="border-bottom: 1px solid rgba(0, 0, 0, 0.12);">
+                  <div
+                    v-show="
+                      abilitySection.selection === 'species' ||
+                      (abilitySection.selection === 'all' &&
+                        speciesAbilities.length > 0)
+                    "
+                  >
+                    <div
+                      class="mb-1"
+                      style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
+                    >
                       <span class="body-2 red--text">Species</span>
                     </div>
-                    <div v-for="ability in speciesAbilities" :key="ability.name" class="caption mb-2">
-                      <strong>{{ ability.name }}</strong><em v-if="ability.source"> • {{ ability.source }}</em>
+                    <div
+                      v-for="ability in speciesAbilities"
+                      :key="ability.name"
+                      class="caption mb-2"
+                    >
+                      <strong>{{ ability.name }}</strong
+                      ><em v-if="ability.source"> • {{ ability.source }}</em>
                       <div v-html="computeFormatedText(ability.effect)" />
-
-                      <div
-                          v-if="ability.selectedOptions"
-                          v-for="selectedOption in ability.selectedOptions"
-                          class="ml-1 pl-2"
-                          style="border-left: solid 3px lightgrey;"
-                      >
-                        <strong>{{ selectedOption.name }}</strong>
-                        <div v-if="selectedOption.snippet"><p class="mb-1" v-html="computeFormatedText(selectedOption.snippet)"></p></div>
-                        <div v-else v-html="computeFormatedText(selectedOption.description)"></div>
-                      </div>
-                    </div>
-                    <div v-if="speciesAbilities.length === 0" align="center" class="mt-2 mb-2">
-                      <em>No abilities? Human eh?</em>
-                    </div>
-                  </div>
-
-                  <!-- archetype < abilities -->
-                  <div v-show="['all', 'archetype'].some(i=>i===abilitySection.selection)">
-
-                    <div class="mb-1" style="border-bottom: 1px solid rgba(0, 0, 0, 0.12);">
-                      <span class="body-2 red--text">Archetype</span>
-                    </div>
-
-                    <div v-for="ability in archetypeAbilities" :key="ability.name" class="caption mb-2">
-
-                      <strong>{{ ability.name }}</strong>
-                      <em v-if="ability.source"> • {{ ability.source }}</em>
-
-                      <div v-if="ability.snippet"><p class="mb-1" v-html="computeFormatedText(ability.snippet)"></p></div>
-                      <div v-else v-html="computeFormatedText(ability.description)"></div>
 
                       <div
                         v-if="ability.selectedOptions"
                         v-for="selectedOption in ability.selectedOptions"
                         class="ml-1 pl-2"
-                        style="border-left: solid 3px lightgrey;"
+                        style="border-left: solid 3px lightgrey"
                       >
                         <strong>{{ selectedOption.name }}</strong>
-                        <div v-if="selectedOption.snippet"><p class="mb-1" v-html="computeFormatedText(selectedOption.snippet)"></p></div>
-                        <div v-else v-html="computeFormatedText(selectedOption.description)"></div>
+                        <div v-if="selectedOption.snippet">
+                          <p
+                            class="mb-1"
+                            v-html="computeFormatedText(selectedOption.snippet)"
+                          ></p>
+                        </div>
+                        <div
+                          v-else
+                          v-html="
+                            computeFormatedText(selectedOption.description)
+                          "
+                        ></div>
                       </div>
+                    </div>
+                    <div
+                      v-if="speciesAbilities.length === 0"
+                      align="center"
+                      class="mt-2 mb-2"
+                    >
+                      <em>No abilities? Human eh?</em>
+                    </div>
+                  </div>
 
+                  <!-- archetype < abilities -->
+                  <div
+                    v-show="
+                      ['all', 'archetype'].some(
+                        (i) => i === abilitySection.selection
+                      )
+                    "
+                  >
+                    <div
+                      class="mb-1"
+                      style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
+                    >
+                      <span class="body-2 red--text">Archetype</span>
+                    </div>
+
+                    <div
+                      v-for="ability in archetypeAbilities"
+                      :key="ability.name"
+                      class="caption mb-2"
+                    >
+                      <strong>{{ ability.name }}</strong>
+                      <em v-if="ability.source"> • {{ ability.source }}</em>
+
+                      <div v-if="ability.snippet">
+                        <p
+                          class="mb-1"
+                          v-html="computeFormatedText(ability.snippet)"
+                        ></p>
+                      </div>
+                      <div
+                        v-else
+                        v-html="computeFormatedText(ability.description)"
+                      ></div>
+
+                      <div
+                        v-if="ability.selectedOptions"
+                        v-for="selectedOption in ability.selectedOptions"
+                        class="ml-1 pl-2"
+                        style="border-left: solid 3px lightgrey"
+                      >
+                        <strong>{{ selectedOption.name }}</strong>
+                        <div v-if="selectedOption.snippet">
+                          <p
+                            class="mb-1"
+                            v-html="computeFormatedText(selectedOption.snippet)"
+                          ></p>
+                        </div>
+                        <div
+                          v-else
+                          v-html="
+                            computeFormatedText(selectedOption.description)
+                          "
+                        ></div>
+                      </div>
                     </div>
                   </div>
 
                   <!-- Ascensions < abilities (Background, Other) -->
-                  <div v-show="abilitySection.selection === 'ascension' || (abilitySection.selection === 'all' && ascensionAbilities.length > 0 )">
-
-                    <div class="mb-1" style="border-bottom: 1px solid rgba(0, 0, 0, 0.12);">
+                  <div
+                    v-show="
+                      abilitySection.selection === 'ascension' ||
+                      (abilitySection.selection === 'all' &&
+                        ascensionAbilities.length > 0)
+                    "
+                  >
+                    <div
+                      class="mb-1"
+                      style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
+                    >
                       <span class="body-2 red--text">Ascension</span>
                     </div>
 
-                    <div v-for="ability in ascensionAbilities" :key="ability.name" class="caption mb-2">
-
+                    <div
+                      v-for="ability in ascensionAbilities"
+                      :key="ability.name"
+                      class="caption mb-2"
+                    >
                       <strong>{{ ability.name }}</strong>
                       <em v-if="ability.source"> • {{ ability.source }}</em>
 
-                      <div v-if="ability.snippet"><p class="mb-1" v-html="computeFormatedText(ability.snippet)"></p></div>
-                      <div v-else v-html="computeFormatedText(ability.description)"></div>
-
-                      <div v-if="ability.selectedOption" class="ml-1 pl-2" style="border-left: solid 3px lightgrey;">
-                        <strong v-if="ability.selectedOption.name">{{ ability.selectedOption.name }}</strong>
-                        <div v-if="ability.selectedOption.snippet"><p class="mb-1" v-html="ability.selectedOption.snippet"></p></div>
+                      <div v-if="ability.snippet">
+                        <p
+                          class="mb-1"
+                          v-html="computeFormatedText(ability.snippet)"
+                        ></p>
                       </div>
+                      <div
+                        v-else
+                        v-html="computeFormatedText(ability.description)"
+                      ></div>
 
+                      <div
+                        v-if="ability.selectedOption"
+                        class="ml-1 pl-2"
+                        style="border-left: solid 3px lightgrey"
+                      >
+                        <strong v-if="ability.selectedOption.name">{{
+                          ability.selectedOption.name
+                        }}</strong>
+                        <div v-if="ability.selectedOption.snippet">
+                          <p
+                            class="mb-1"
+                            v-html="ability.selectedOption.snippet"
+                          ></p>
+                        </div>
+                      </div>
                     </div>
-
                   </div>
 
                   <!-- talents < abilities -->
-                  <div v-show="['all', 'talents'].some(i=>i===abilitySection.selection)" >
-
-                    <div class="mb-1" style="border-bottom: 1px solid rgba(0, 0, 0, 0.12); display: flex;">
-                      <span class="body-2 red--text" style="flex: 1;">Talents</span>
-                      <div style="flex-wrap: wrap; display: flex;" v-if="characterFaith.points > 0">
+                  <div
+                    v-show="
+                      ['all', 'talents'].some(
+                        (i) => i === abilitySection.selection
+                      )
+                    "
+                  >
+                    <div
+                      class="mb-1"
+                      style="
+                        border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+                        display: flex;
+                      "
+                    >
+                      <span class="body-2 red--text" style="flex: 1"
+                        >Talents</span
+                      >
+                      <div
+                        style="flex-wrap: wrap; display: flex"
+                        v-if="characterFaith.points > 0"
+                      >
                         <div
                           v-for="pointIndex in characterFaith.points"
                           class="faith-box"
-                          :class="{ 'faith-box--filled': pointIndex <= characterFaith.spend }"
+                          :class="{
+                            'faith-box--filled':
+                              pointIndex <= characterFaith.spend,
+                          }"
                           @click="toggleResourceFaith(pointIndex)"
                         ></div>
                         <span class="caption ml-2">/ Faith Points</span>
                       </div>
                     </div>
 
-                    <div v-if="talents.length > 0" v-for="talent in talents" :key="talent.name" class="caption mb-2">
-
+                    <div
+                      v-if="talents.length > 0"
+                      v-for="talent in talents"
+                      :key="talent.name"
+                      class="caption mb-2"
+                    >
                       <strong>{{ talent.name }}</strong>
                       <em> • Talent</em>
                       <span v-if="talent.source">
-                        <em v-if="talent.source.key"> • {{ talent.source.key }}</em><em v-if="!isNaN(talent.source.page)">, pg. {{ talent.source.page }}</em>
+                        <em v-if="talent.source.key">
+                          • {{ talent.source.key }}</em
+                        ><em v-if="!isNaN(talent.source.page)"
+                          >, pg. {{ talent.source.page }}</em
+                        >
                       </span>
-                      <div v-if="talent.snippet"><p class="mb-1" v-html="computeFormatedText(talent.snippet)"></p></div>
-                      <div v-else v-html="computeFormatedText(talent.description)"></div>
+                      <div v-if="talent.snippet">
+                        <p
+                          class="mb-1"
+                          v-html="computeFormatedText(talent.snippet)"
+                        ></p>
+                      </div>
+                      <div
+                        v-else
+                        v-html="computeFormatedText(talent.description)"
+                      ></div>
 
                       <div
                         v-if="talent.selectedOptions"
                         v-for="selectedOption in talent.selectedOptions"
                         class="ml-1 pl-2"
-                        style="border-left: solid 3px lightgrey;"
+                        style="border-left: solid 3px lightgrey"
                       >
                         <strong>{{ selectedOption.name }}</strong>
-                        <div v-if="selectedOption.snippet"><p class="mb-1" v-html="computeFormatedText(selectedOption.snippet)"></p></div>
-                        <div v-else v-html="computeFormatedText(selectedOption.description)"></div>
+                        <div v-if="selectedOption.snippet">
+                          <p
+                            class="mb-1"
+                            v-html="computeFormatedText(selectedOption.snippet)"
+                          ></p>
+                        </div>
+                        <div
+                          v-else
+                          v-html="
+                            computeFormatedText(selectedOption.description)
+                          "
+                        ></div>
                       </div>
 
-                      <div v-if="false" class="mt-1 mb-1 ml-1 pl-2" style="flex-wrap: wrap; display: flex; border-left: solid 3px lightgrey;" >
+                      <div
+                        v-if="false"
+                        class="mt-1 mb-1 ml-1 pl-2"
+                        style="
+                          flex-wrap: wrap;
+                          display: flex;
+                          border-left: solid 3px lightgrey;
+                        "
+                      >
                         <div
                           v-for="pointIndex in characterFaith.points"
                           class="faith-box"
-                          :class="{ 'faith-box--filled': pointIndex <= characterFaith.spend }"
+                          :class="{
+                            'faith-box--filled':
+                              pointIndex <= characterFaith.spend,
+                          }"
                           @click="toggleResourceFaith(pointIndex)"
                         ></div>
                         <span class="caption ml-2">/ Faith Points</span>
                       </div>
-
                     </div>
 
-                    <div v-if="talents.length === 0" align="center" class="mt-2 mb-2">
+                    <div
+                      v-if="talents.length === 0"
+                      align="center"
+                      class="mt-2 mb-2"
+                    >
                       <em>Knowledge is treason.</em>
                     </div>
                   </div>
 
                   <!-- talents (with faith) < abilities -->
-                  <div v-if="false" v-show="['all', 'faith'].some(i=>i===abilitySection.selection)" class="caption">
-                    <div class="mb-1" style="border-bottom: 1px solid rgba(0, 0, 0, 0.12); display: flex;">
-                      <span class="body-2 red--text" style="flex: 1;">Faith</span>
-                      <div style="flex-wrap: wrap; display: flex;">
+                  <div
+                    v-if="false"
+                    v-show="
+                      ['all', 'faith'].some(
+                        (i) => i === abilitySection.selection
+                      )
+                    "
+                    class="caption"
+                  >
+                    <div
+                      class="mb-1"
+                      style="
+                        border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+                        display: flex;
+                      "
+                    >
+                      <span class="body-2 red--text" style="flex: 1"
+                        >Faith</span
+                      >
+                      <div style="flex-wrap: wrap; display: flex">
                         <div
                           v-for="pointIndex in characterFaith.points"
                           class="faith-box"
-                          :class="{ 'faith-box--filled': pointIndex <= characterFaith.spend }"
+                          :class="{
+                            'faith-box--filled':
+                              pointIndex <= characterFaith.spend,
+                          }"
                           @click="toggleResourceFaith(pointIndex)"
                         ></div>
                         <span class="body-2 ml-2">Faith Points</span>
                       </div>
                     </div>
-                    <div v-if="talentsForFaith.length > 0" v-for="talent in talentsForFaith" :key="talent.name" >
-                      <strong>{{ talent.name }}</strong><em> • Talent</em>
+                    <div
+                      v-if="talentsForFaith.length > 0"
+                      v-for="talent in talentsForFaith"
+                      :key="talent.name"
+                    >
+                      <strong>{{ talent.name }}</strong
+                      ><em> • Talent</em>
                       <p v-html="computeFormatedText(talent.description)" />
                     </div>
-                    <div v-if="talentsForFaith.length === 0" align="center" class="mt-2 mb-2">
+                    <div
+                      v-if="talentsForFaith.length === 0"
+                      align="center"
+                      class="mt-2 mb-2"
+                    >
                       <em>The heretic does not live the imperial creed.</em>
                     </div>
                   </div>
 
                   <!-- other < abilities (Ascensions, Background, Other) -->
-                  <div v-show="abilitySection.selection === 'other' || (abilitySection.selection === 'all' && otherAbilities.length > 0 )">
-
-                    <div class="mb-1" style="border-bottom: 1px solid rgba(0, 0, 0, 0.12);">
+                  <div
+                    v-show="
+                      abilitySection.selection === 'other' ||
+                      (abilitySection.selection === 'all' &&
+                        otherAbilities.length > 0)
+                    "
+                  >
+                    <div
+                      class="mb-1"
+                      style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
+                    >
                       <span class="body-2 red--text">Other</span>
                     </div>
 
-                    <div v-for="ability in otherAbilities" :key="`${ability.id ? ability.id : ability.name}`" class="caption mb-3">
-
+                    <div
+                      v-for="ability in otherAbilities"
+                      :key="`${ability.id ? ability.id : ability.name}`"
+                      class="caption mb-3"
+                    >
                       <strong>{{ ability.name }}</strong>
                       <em v-if="ability.source"> • {{ ability.source }}</em>
                       <span v-if="ability.source === 'Mutation'">
@@ -767,38 +1147,60 @@
                             small
                             @click="removeMutation(ability.id)"
                             slot-scope="{ hover }"
-                            :color="`${ hover ? 'error' : '' }`"
-                          >delete</v-icon>
+                            :color="`${hover ? 'error' : ''}`"
+                            >delete</v-icon
+                          >
                         </v-hover>
                       </span>
 
-                      <div v-if="ability.snippet"><p class="mb-1" v-html="computeFormatedText(ability.snippet)"></p></div>
-                      <div v-else v-html="computeFormatedText(ability.description)"></div>
+                      <div v-if="ability.snippet">
+                        <p
+                          class="mb-1"
+                          v-html="computeFormatedText(ability.snippet)"
+                        ></p>
+                      </div>
+                      <div
+                        v-else
+                        v-html="computeFormatedText(ability.description)"
+                      ></div>
 
-                      <div v-if="ability.selectedOption" class="ml-1 pl-2 mt-1" style="border-left: solid 3px lightgrey;">
-                        <strong v-if="ability.selectedOption.name">{{ ability.selectedOption.name }}</strong>
-                        <p v-if="ability.selectedOption.snippet">{{ability.selectedOption.snippet}}</p>
+                      <div
+                        v-if="ability.selectedOption"
+                        class="ml-1 pl-2 mt-1"
+                        style="border-left: solid 3px lightgrey"
+                      >
+                        <strong v-if="ability.selectedOption.name">{{
+                          ability.selectedOption.name
+                        }}</strong>
+                        <p v-if="ability.selectedOption.snippet">
+                          {{ ability.selectedOption.snippet }}
+                        </p>
                       </div>
 
                       <div
                         v-if="ability.selectedOptions"
                         v-for="selectedOption in ability.selectedOptions"
                         class="ml-1 pl-2"
-                        style="border-left: solid 3px lightgrey;"
+                        style="border-left: solid 3px lightgrey"
                       >
                         <strong>{{ selectedOption.name }}</strong>
-                        <div v-if="selectedOption.snippet"><p class="mb-1" v-html="computeFormatedText(selectedOption.snippet)"></p></div>
-                        <div v-else v-html="computeFormatedText(selectedOption.description)"></div>
+                        <div v-if="selectedOption.snippet">
+                          <p
+                            class="mb-1"
+                            v-html="computeFormatedText(selectedOption.snippet)"
+                          ></p>
+                        </div>
+                        <div
+                          v-else
+                          v-html="
+                            computeFormatedText(selectedOption.description)
+                          "
+                        ></div>
                       </div>
-
                     </div>
-
                   </div>
-
                 </div>
-
               </div>
-
             </v-tab-item>
 
             <!-- powers -->
@@ -843,18 +1245,42 @@
               </div>
 
               <!-- notes, bound, others -->
-              <div class="pa-2" style="border-top: 1px solid rgba(0, 0, 0, 0.12);">
+              <div
+                class="pa-2"
+                style="border-top: 1px solid rgba(0, 0, 0, 0.12)"
+              >
                 <div class="caption mb-2">
                   <strong>Power Levels</strong><em> • core, pg. 260</em>
-                  <div>You may cast <em>Bound</em>, <em>Unbound</em> or <em>Transcendent</em>.</div>
+                  <div>
+                    You may cast <em>Bound</em>, <em>Unbound</em> or
+                    <em>Transcendent</em>.
+                  </div>
                 </div>
-                <div v-if="speciesKey && speciesKey.startsWith('core-aeldari')" class="caption mb-2">
+                <div
+                  v-if="speciesKey && speciesKey.startsWith('core-aeldari')"
+                  class="caption mb-2"
+                >
                   <strong>Aeldari Psyker</strong><em> • core, pg. 282</em>
-                  <div>If you trigger Perils of the Warp you must roll 2d6; the highest is always the ‘tens’ digit of the d66 roll, and the lower result is the units digit.</div>
+                  <div>
+                    If you trigger Perils of the Warp you must roll 2d6; the
+                    highest is always the ‘tens’ digit of the d66 roll, and the
+                    lower result is the units digit.
+                  </div>
                 </div>
-                <div v-if="speciesKey && speciesKey.startsWith('core-aeldari') && keywordStrings && keywordStrings.includes('Asuryani')" class="caption mb-2">
+                <div
+                  v-if="
+                    speciesKey &&
+                    speciesKey.startsWith('core-aeldari') &&
+                    keywordStrings &&
+                    keywordStrings.includes('Asuryani')
+                  "
+                  class="caption mb-2"
+                >
                   <strong>Asuryani Psyker</strong><em> • core, pg. 282</em>
-                  <div>You may reroll a single Wrath Dice that rolled a Complication once per Test.</div>
+                  <div>
+                    You may reroll a single Wrath Dice that rolled a
+                    Complication once per Test.
+                  </div>
                 </div>
               </div>
             </v-tab-item>
@@ -866,38 +1292,64 @@
               :value="`tab-objectives`"
             >
               <div class="pa-2">
-
-                <v-chip-group mandatory active-class="red--text" v-model="descriptionSection.selection">
+                <v-chip-group
+                  mandatory
+                  active-class="red--text"
+                  v-model="descriptionSection.selection"
+                >
                   <v-chip
                     label
                     small
-                    v-for="item in [`All`,`Objectives`,`Languages`,`Keywords`,`Notes`]"
+                    v-for="item in [
+                      `All`,
+                      `Objectives`,
+                      `Languages`,
+                      `Keywords`,
+                      `Notes`,
+                    ]"
                     :key="item.toLowerCase()"
                     :value="item.toLowerCase()"
                   >
-                    {{item}}
+                    {{ item }}
                   </v-chip>
                 </v-chip-group>
 
-                <div style="height: 505px; overflow-y: auto;">
-
+                <div style="height: 505px; overflow-y: auto">
                   <!-- objectives < description -->
-                  <div v-show="['all', 'objectives'].some(i=>i===descriptionSection.selection)">
-                    <div class="mb-1" style="border-bottom: 1px solid rgba(0, 0, 0, 0.12);">
+                  <div
+                    v-show="
+                      ['all', 'objectives'].some(
+                        (i) => i === descriptionSection.selection
+                      )
+                    "
+                  >
+                    <div
+                      class="mb-1"
+                      style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
+                    >
                       <span class="body-2 red--text">Objectives</span>
-                      <v-icon small v-if="false" @click="objectiveEditorOpen">edit</v-icon>
+                      <v-icon small v-if="false" @click="objectiveEditorOpen"
+                        >edit</v-icon
+                      >
                     </div>
                     <div
                       v-for="(objective, index) in objectives"
                       :key="objective.name"
                       class="pl-2 pr-2 pt-1 pb-1 caption"
                     >
-                      <strong>{{ index+1 }}:</strong> {{ objective.text }}
+                      <strong>{{ index + 1 }}:</strong> {{ objective.text }}
                     </div>
                     <div v-if="false">
-                      <span class="caption" @click="objectiveEditorOpen">+ Add/edit objectives</span>
+                      <span class="caption" @click="objectiveEditorOpen"
+                        >+ Add/edit objectives</span
+                      >
                     </div>
-                    <div style="display: flex;" justify="center" align v-if="objectiveEditorShow">
+                    <div
+                      style="display: flex"
+                      justify="center"
+                      align
+                      v-if="objectiveEditorShow"
+                    >
                       <v-textarea
                         flat
                         single-lined
@@ -908,21 +1360,36 @@
                   </div>
 
                   <!-- languages < description -->
-                  <div v-show="['all', 'languages'].some(i=>i===descriptionSection.selection)">
-                    <div class="mb-2" style="border-bottom: 1px solid rgba(0, 0, 0, 0.12);">
+                  <div
+                    v-show="
+                      ['all', 'languages'].some(
+                        (i) => i === descriptionSection.selection
+                      )
+                    "
+                  >
+                    <div
+                      class="mb-2"
+                      style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
+                    >
                       <span class="body-2 red--text">Languages</span>
                     </div>
-                    <div
-                      v-if="languages.length > 0"
-                      class="caption"
-                    >
-                      {{ languages.map((l)=>l.name).join(' • ') }}
+                    <div v-if="languages.length > 0" class="caption">
+                      {{ languages.map((l) => l.name).join(" • ") }}
                     </div>
                   </div>
 
                   <!-- keywords < description -->
-                  <div v-show="['all', 'keywords'].some(i=>i===descriptionSection.selection)">
-                    <div class="mb-2" style="border-bottom: 1px solid rgba(0, 0, 0, 0.12);">
+                  <div
+                    v-show="
+                      ['all', 'keywords'].some(
+                        (i) => i === descriptionSection.selection
+                      )
+                    "
+                  >
+                    <div
+                      class="mb-2"
+                      style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
+                    >
                       <span class="body-2 red--text">Keywords</span>
                     </div>
                     <div
@@ -938,45 +1405,70 @@
                             small
                             @click="removeCustomKeyword(keyword.name)"
                             slot-scope="{ hover }"
-                            :color="`${ hover ? 'error' : '' }`"
-                          >delete</v-icon>
+                            :color="`${hover ? 'error' : ''}`"
+                            >delete</v-icon
+                          >
                         </v-hover>
                       </span>
                       <p>
                         {{ keyword.description }}
                       </p>
                     </div>
-                    <div style="display: flex; justify-content: center;">
-                      <v-btn x-small text @click="keywordsEditorDialog = true">Additional Keywords <v-icon small>settings</v-icon></v-btn>
+                    <div style="display: flex; justify-content: center">
+                      <v-btn x-small text @click="keywordsEditorDialog = true"
+                        >Additional Keywords
+                        <v-icon small>settings</v-icon></v-btn
+                      >
                     </div>
                   </div>
 
-
                   <!-- objectives < description -->
-                  <div v-show="['all', 'notes'].some(i=>i===descriptionSection.selection)">
-                    <div class="mb-1" style="border-bottom: 1px solid rgba(0, 0, 0, 0.12);">
+                  <div
+                    v-show="
+                      ['all', 'notes'].some(
+                        (i) => i === descriptionSection.selection
+                      )
+                    "
+                  >
+                    <div
+                      class="mb-1"
+                      style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
+                    >
                       <span class="body-2 red--text">
                         Notes
-                        <v-icon v-if="!characterNotesShowEditor" small @click="characterNotesOpenEditor">edit</v-icon>
+                        <v-icon
+                          v-if="!characterNotesShowEditor"
+                          small
+                          @click="characterNotesOpenEditor"
+                          >edit</v-icon
+                        >
                       </span>
                     </div>
                     <div v-if="characterNotesShowEditor">
                       <v-textarea
-                          v-model="characterNotesEditorModel"
-                          hint="Use markdown, e.g. **bold** _italic_"
-                          persistent-hint
-                          filled
-                          auto-grow
+                        v-model="characterNotesEditorModel"
+                        hint="Use markdown, e.g. **bold** _italic_"
+                        persistent-hint
+                        filled
+                        auto-grow
                       ></v-textarea>
-                      <v-btn @click="characterNotesSave" small color="success">Save</v-btn>
+                      <v-btn @click="characterNotesSave" small color="success"
+                        >Save</v-btn
+                      >
                     </div>
-                    <div v-else-if="characterNotes" class="caption" v-html="characterNotes">
-                    </div>
-                    <span v-else class="caption" @click="characterNotesOpenEditor">+ Add Notes</span>
+                    <div
+                      v-else-if="characterNotes"
+                      class="caption"
+                      v-html="characterNotes"
+                    ></div>
+                    <span
+                      v-else
+                      class="caption"
+                      @click="characterNotesOpenEditor"
+                      >+ Add Notes</span
+                    >
                   </div>
-
                 </div>
-
               </div>
 
               <v-row v-if="false" no-gutters>
@@ -987,18 +1479,12 @@
                         Spend one <strong>Wrath</strong> to:
                       </p>
                       <ul class="pl-3">
-                        <li class="caption">
-                          Re-roll failures once on a test
-                        </li>
+                        <li class="caption">Re-roll failures once on a test</li>
                         <li class="caption">
                           Re-roll failures once on a soak attempt
                         </li>
-                        <li class="caption">
-                          Add +1 to a Defiance check
-                        </li>
-                        <li class="caption">
-                          Make a narrative declaration
-                        </li>
+                        <li class="caption">Add +1 to a Defiance check</li>
+                        <li class="caption">Make a narrative declaration</li>
                         <li class="caption">
                           As an Action: restore 1d3+1 Shock
                         </li>
@@ -1023,27 +1509,18 @@
                         <li class="caption">
                           Increase the severity of a Critical Hit
                         </li>
-                        <li class="caption">
-                          Seize the Initiative
-                        </li>
+                        <li class="caption">Seize the Initiative</li>
                       </ul>
                     </v-card-text>
                   </v-card>
                 </v-col>
               </v-row>
-
             </v-tab-item>
-
           </v-tabs>
-
         </v-card>
-
       </v-col>
-
     </v-row>
-
   </div>
-
 </template>
 
 <script lang="js">
@@ -1305,9 +1782,11 @@ export default {
     attributes() {
 
       const characterAttributes = this.$store.getters['characters/characterAttributesById'](this.characterId);
+
       let attributes = this.attributeRepository.map((repositoryAttribute) => {
         return {
           ...repositoryAttribute,
+
           value: characterAttributes[repositoryAttribute.key],
           enhancedValue: parseInt(this.characterAttributesEnhanced[repositoryAttribute.key]),
           rating: characterAttributes[repositoryAttribute.key],
@@ -1328,10 +1807,10 @@ export default {
       });
 
       attributes = attributes.map((a) => {
-        if (a.adjustedRating < 1) {
-          a.adjustedRating = Math.max(1, a.adjustedRating);
-          a.modifiers.push('(i) Value is increase to at least 1.');
-        }
+        // if (a.adjustedRating < 1) {
+          a.adjustedRating = Math.floor((a.value - 10) / 2);
+          // a.modifiers.push('(i) Value is increase to at least 1.');
+        // }
         return a;
       });
 
@@ -1553,6 +2032,7 @@ export default {
           ...repositorySkill,
           value: characterSkills[repositorySkill.key],
           enhancedValue: parseInt(characterSkills[repositorySkill.key]),
+          isProfiency: false,
           rating: characterSkills[repositorySkill.key],
           adjustedRating: parseInt(characterSkills[repositorySkill.key]),
           adjustment: 0,
@@ -1562,16 +2042,18 @@ export default {
           adjustedAttributeValue: 0,
           attributeObject: {},
         };
-        const attribute = this.attributes.find((a) => a.name === skill.attribute);
+        const attribute = this.attributes.find((a) => a.key === skill.attribute);
+
         if (attribute) {
           skill.attributeObject = attribute;
-          skill.adjustedAttributeValue = attribute.adjustedRating;
+          skill.adjustedAttributeValue = attribute.adjustedRating + 3;
         }
-        if (skill.name === 'Intimidation' && this.talents.includes('Imposing Presence')) {
-          const strength = this.attributes.find((a) => a.name === 'Strength');
-          skill.attributeObject = strength;
-          skill.adjustedAttributeValue = strength.adjustedRating;
-        }
+        // if (skill.name === 'Intimidation' && this.talents.includes('Imposing Presence')) {
+        //   const strength = this.attributes.find((a) => a.name === 'Strength');
+        //   skill.attributeObject = strength;
+        //   skill.adjustedAttributeValue = strength.adjustedRating;
+        // }
+        console.log("отладка скила", skill);
         return skill;
       });
 
@@ -2394,6 +2876,7 @@ export default {
     },
     computeSkillPool(skill) {
       const attribute = this.attributes.find((a) => a.name === skill.attribute);
+      console.log("Отладка вида", attribute);
       if (attribute) {
           return attribute.adjustedRating + skill.adjustedRating;
       }
@@ -2539,98 +3022,102 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.page-title {
+}
 
-  .page-title {
-  }
+.small {
+  height: 24px;
+}
 
-  .small {
-    height: 24px;
-  }
+td.small {
+  font-size: 12px;
+}
 
-  td.small {
-    font-size: 12px;
-  }
+.my-tabs-container {
+  height: 620px;
+  overflow: hidden;
+}
 
-  .my-tabs-container {
-    height: 620px;
-    overflow: hidden;
-  }
+.my-tab-item {
+  height: 705px;
+  overflow-y: auto;
+}
 
-  .my-tab-item {
-    height: 705px;
-    overflow-y: auto;
-  }
+.sexy_line {
+  display: block;
+  border: none;
+  color: white;
+  height: 1px;
+  background: black;
+  background: -webkit-gradient(
+    radial,
+    50% 50%,
+    0,
+    50% 50%,
+    350,
+    from(#000),
+    to(#fff)
+  );
+}
 
-  .sexy_line{
-    display:block;
-    border:none;
-    color:white;
-    height:1px;
-    background:black;
-    background: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 350, from(#000), to(#fff));
-  }
+.resource-box {
+  $size: 12px;
+  min-height: $size;
+  max-height: $size;
+  min-width: $size;
+  max-width: $size;
+  border: 1px solid hsl(0, 0%, 85%);
+  box-shadow: inset 0 0 4px 0 hsl(0, 0%, 85%);
+  cursor: pointer;
 
-  .resource-box {
-    $size: 12px;
-    min-height: $size;
-    max-height: $size;
-    min-width: $size;
-    max-width: $size;
-    border: 1px solid hsl(0, 0%, 85%);
-    box-shadow: inset 0 0 4px 0 hsl(0, 0%, 85%);
-    cursor: pointer;
+  box-sizing: inherit;
+  margin: 2px;
 
-    box-sizing: inherit;
-    margin: 2px;
-
-    &--filled {
-
-      &:before {
-        content: "";
-        display: block;
-        height: 7px;
-        width: 7px;
-        margin-top: 1.5px;
-        margin-left: 1.5px;
-      }
-
-      &::before {
-        background-color: hsl(0, 100%, 37%);
-      }
+  &--filled {
+    &:before {
+      content: "";
+      display: block;
+      height: 7px;
+      width: 7px;
+      margin-top: 1.5px;
+      margin-left: 1.5px;
     }
 
-    &--filled-light::before {
-      background-color: hsl(62, 70%, 44%) !important;
+    &::before {
+      background-color: hsl(0, 100%, 37%);
     }
   }
 
-  .faith-box {
-    min-height: 20px;
-    max-height: 20px;
-    min-width: 20px;
-    max-width: 20px;
-    border: 1px solid hsl(0, 0%, 85%);
-    box-shadow: inset 0 0 4px 0 hsl(0, 0%, 85%);
-    cursor: pointer;
+  &--filled-light::before {
+    background-color: hsl(62, 70%, 44%) !important;
+  }
+}
 
-    box-sizing: inherit;
-    margin: 2px;
+.faith-box {
+  min-height: 20px;
+  max-height: 20px;
+  min-width: 20px;
+  max-width: 20px;
+  border: 1px solid hsl(0, 0%, 85%);
+  box-shadow: inset 0 0 4px 0 hsl(0, 0%, 85%);
+  cursor: pointer;
 
-    &--filled {
+  box-sizing: inherit;
+  margin: 2px;
 
-      &:before {
-        content: "";
-        display: block;
-        height: 10px;
-        width: 10px;
-        margin-top: 4px;
-        margin-left: 4px;
-      }
-
-      &::before {
-        background-color: hsl(0, 100%, 37%);
-      }
+  &--filled {
+    &:before {
+      content: "";
+      display: block;
+      height: 10px;
+      width: 10px;
+      margin-top: 4px;
+      margin-left: 4px;
     }
 
+    &::before {
+      background-color: hsl(0, 100%, 37%);
+    }
   }
+}
 </style>

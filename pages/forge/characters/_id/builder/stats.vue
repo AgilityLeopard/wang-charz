@@ -5,16 +5,37 @@
         Select Attributes and Skills
         <span>
           <v-icon v-if="alerts && alerts.length <= 0">error_outline</v-icon>
-          <v-btn color="warning" v-else-if="showAlerts" @click="showAlerts = !showAlerts" small><v-icon small left>error</v-icon> Hide warnings</v-btn>
-          <v-btn color="warning" v-else @click="showAlerts = !showAlerts" outlined small>
-            <v-icon small left>error_outline</v-icon>show {{alerts.length}} warning{{ alerts.length > 1 ? 's' : '' }}
+          <v-btn
+            color="warning"
+            v-else-if="showAlerts"
+            @click="showAlerts = !showAlerts"
+            small
+            ><v-icon small left>error</v-icon> Hide warnings</v-btn
+          >
+          <v-btn
+            color="warning"
+            v-else
+            @click="showAlerts = !showAlerts"
+            outlined
+            small
+          >
+            <v-icon small left>error_outline</v-icon>show
+            {{ alerts.length }} warning{{ alerts.length > 1 ? "s" : "" }}
           </v-btn>
-          <v-btn color="primary" @click="resetStats" outlined small>reset Stats</v-btn>
+          <v-btn color="primary" @click="resetStats" outlined small
+            >reset Stats</v-btn
+          >
         </span>
       </h1>
     </v-col>
 
-    <v-progress-circular v-if="!archetype" indeterminate color="success" size="128" width="12" />
+    <!-- <v-progress-circular
+      v-if="!archetype"
+      indeterminate
+      color="success"
+      size="128"
+      width="12"
+    /> -->
 
     <v-col :cols="12" v-if="showAlerts">
       <v-alert
@@ -27,92 +48,110 @@
         border="left"
       >
         {{ alert.text }}
-        <v-btn v-if="alert.key === 'prerequisites'" color="primary" @click="ensurePrerequisites" small>
+        <v-btn
+          v-if="alert.key === 'prerequisites'"
+          color="primary"
+          @click="ensurePrerequisites"
+          small
+        >
           Increase stats to fit the archetype.
-          <v-icon right small>
-            library_add
-          </v-icon>
+          <v-icon right small> library_add </v-icon>
         </v-btn>
       </v-alert>
     </v-col>
 
-    <v-col :cols="12" :md="6" v-if="archetype">
+    <!-- <v-col :cols="12" :md="6" v-if="species">
+      <v-select
+        dense
+        outlined
+        label="Выберите Вариант распределения"
+        v-model="advancedBoost"
+        :items="advancedBoostOptions"
+      />
+    </v-col> -->
+    <!-- <v-col :cols="12" :md="6" v-if="archetype"> -->
+    <v-card>
+      <v-simple-table dense>
+        <template v-slot:default>
+          <tbody>
+            <tr v-for="attribute in attributeRepository" :key="attribute.key">
+              <td>{{ attribute.name }}</td>
+              <td>
+                <v-btn
+                  icon
+                  :disabled="characterAttributes[attribute.key] <= 10"
+                  @click="decrementAttribute(attribute.key)"
+                >
+                  <v-icon color="red"> remove_circle </v-icon>
+                </v-btn>
+                {{ characterAttributes[attribute.key] }}
+                <v-btn
+                  icon
+                  :disabled="characterAttributes[attribute.key] >= 18"
+                  @click="incrementAttribute(attribute.key)"
+                >
+                  <v-icon
+                    :color="
+                      affordableAttributeColor(
+                        characterAttributes[attribute.key]
+                      )
+                    "
+                  >
+                    add_circle
+                  </v-icon>
+                </v-btn>
+              </td>
+              <td>{{ characterAttributesEnhanced[attribute.key] }}</td>
+            </tr>
+
+            <!-- <tr v-for="trait in traitRepository" :key="trait.key">
+              <td>{{ trait.name }}:</td>
+              <td>{{ characterTraits[trait.key] }}</td>
+              <td>{{ characterTraitsEnhanced[trait.key] }}</td>
+            </tr> -->
+          </tbody>
+        </template>
+      </v-simple-table>
+    </v-card>
+    <!-- </v-col> -->
+
+    <v-col :cols="12" :md="6" v-if="!archetype">
       <v-card>
         <v-simple-table dense>
           <template v-slot:default>
             <tbody>
-              <tr
-                v-for="attribute in attributeRepository"
-                :key="attribute.key"
-              >
-                <td>{{ attribute.name }}</td>
-                <td>
-                  <v-btn
-                    icon
-                    :disabled="characterAttributes[attribute.key] <= 1"
-                    @click="decrementAttribute(attribute.key)"
-                  >
-                    <v-icon color="red">
-                      remove_circle
-                    </v-icon>
-                  </v-btn>
-                  {{ characterAttributes[attribute.key] }}
-                  <v-btn
-                    icon
-                    :disabled="characterAttributes[attribute.key] >= attributeMaximumFor(attribute.name)"
-                    @click="incrementAttribute(attribute.key)"
-                  >
-                    <!--"-->
-                    <v-icon :color="affordableAttributeColor(characterAttributes[attribute.key])">
-                      add_circle
-                    </v-icon>
-                  </v-btn>
-                </td>
-                <td>{{ characterAttributesEnhanced[attribute.key] }}</td>
-              </tr>
-
-              <tr
-                v-for="trait in traitRepository"
-                :key="trait.key"
-              >
-                <td>{{ trait.name }}:</td>
-                <td>{{ characterTraits[trait.key] }}</td>
-                <td>{{ characterTraitsEnhanced[trait.key] }}</td>
-              </tr>
-            </tbody>
-          </template>
-        </v-simple-table>
-      </v-card>
-    </v-col >
-
-    <v-col :cols="12" :md="6" v-if="archetype">
-      <v-card>
-        <v-simple-table dense>
-          <template v-slot:default>
-            <tbody>
-              <tr
-                v-for="skill in finalSkillRepository"
-                :key="skill.key"
-              >
+              <tr v-for="skill in finalSkillRepository" :key="skill.key">
                 <td>{{ skill.name }}</td>
                 <td>
-                  <v-btn icon :disabled="characterSkills[skill.key] <= 0" @click="decrementSkill(skill.key)">
-                    <v-icon color="red">
-                      remove_circle
-                    </v-icon>
-                  </v-btn>
-                  {{ characterSkills[skill.key] }}
-                  <v-btn
+                  <v-switch
+                    v-model="isProfiency[skill.key]"
+                    hide-details
+                    :value="computeProfiencyPool(skill)"
+                    inset
+                    icon
+                    @change="
+                      if (isProfiency[skill.key]) {
+                        incrementProfiencySkill(skill);
+                      } else {
+                        decrementProfiencySkill(skill);
+                      }
+                    "
+                  >
+                    <!-- <v-icon color="red"> remove_circle </v-icon> -->
+                  </v-switch>
+                  <!-- {{ characterSkills[skill.key] }} -->
+                  <!-- <v-btn
                     icon
                     :disabled="characterSkills[skill.key] >= skillMaximum"
                     @click="incrementSkill(skill.key)"
-                  >
-                    <v-icon
+                    @click="(if(isProfiency) incrementProfiencySkill(skill.key); else decrementProfiencySkill(skill.key);)"
+                  > -->
+                  <!-- <v-icon
                       :color="affordableSkillColor(characterSkills[skill.key])"
                     >
                       add_circle
                     </v-icon>
-                  </v-btn>
+                  </v-btn> -->
                 </td>
                 <td>{{ computeSkillPool(skill) }}</td>
               </tr>
@@ -121,7 +160,6 @@
         </v-simple-table>
       </v-card>
     </v-col>
-
   </v-row>
 </template>
 
@@ -147,6 +185,35 @@ export default {
       archetype: undefined,
       species: undefined,
       loading: false,
+      advancedBoost: 1,
+      isProfiency:  {
+        athletics: false,
+        history: false ,
+        arcana:  false,
+        nature: false ,
+        deception :false ,
+        insight  :false,
+        intimidation  :false,
+        investigation  :false,
+        religion:  false ,
+        perfomance: false ,
+        persuasion: false,
+        medicine: false,
+        perception:  false ,
+        animalHandling: false,
+        stealth:  false ,
+        survival:  false ,
+        acrobatic: false ,
+        sleightOfHand:  false
+        // initiative: 1,
+      },
+      advancedBoostOptions: [
+        { text: '+2 к одной характеристике и +1 к другой', value: 1, naming: 'Первый вариант' },
+        { text: '+1 к трем характеристикам', value: 2, naming: 'Второй вариант' },
+        // { text: '3 - Elite Guardians', value: 3, naming: 'Veteran' },
+        // { text: '4 - Heroic Operatives', value: 4, naming: 'Heroic' },
+        // { text: '5 - Agents of Fate', value: 5 },
+      ],
     };
   },
   head() {
@@ -159,13 +226,13 @@ export default {
       const alerts = [];
 
       // archetype prerequisites matched?
-      if (!this.archetypePrerequisitesValid) {
-        alerts.push({
-          key: 'prerequisites',
-          type: 'warning',
-          text: 'Your attributes are lower than the picked archetype `demands`.',
-        });
-      }
+      // if (!this.archetypePrerequisitesValid) {
+      //   alerts.push({
+      //     key: 'prerequisites',
+      //     type: 'warning',
+      //     text: 'Your attributes are lower than the picked archetype `demands`.',
+      //   });
+      // }
 
       // tree of learning valid?
       if (!this.treeOfLearningValid) {
@@ -182,25 +249,25 @@ export default {
       const archetype = this.archetype;
 
       let fulfilled = true;
-      if (archetype && archetype.prerequisites.length > 0) {
-        archetype.prerequisites.forEach((prerequisite) => {
-          // { group: 'attributes', value: 'willpower', threshold: 3, }
-          switch (prerequisite.group) {
-            case 'attributes':
-              const attributeValue = this.characterAttributesEnhanced[prerequisite.value];
-              if (attributeValue < prerequisite.threshold) {
-                fulfilled = false;
-              }
-              break;
-            case 'skills':
-              const skillValue = this.characterSkills[prerequisite.value];
-              if (skillValue < prerequisite.threshold) {
-                fulfilled = false;
-              }
-              break;
-          }
-        });
-      }
+      // if (archetype && archetype.prerequisites.length > 0) {
+      //   archetype.prerequisites.forEach((prerequisite) => {
+      //     // { group: 'attributes', value: 'willpower', threshold: 3, }
+      //     switch (prerequisite.group) {
+      //       case 'attributes':
+      //         const attributeValue = this.characterAttributesEnhanced[prerequisite.value];
+      //         // if (attributeValue < prerequisite.threshold) {
+      //         //   fulfilled = false;
+      //         // }
+      //         break;
+      //       case 'skills':
+      //         const skillValue = this.characterSkills[prerequisite.value];
+      //         // if (skillValue < prerequisite.threshold) {
+      //         //   fulfilled = false;
+      //         // }
+      //         break;
+      //     }
+      //   });
+      // }
 
       if (this.ascensionPackages) {
         // this.ascensionPackages.
@@ -248,6 +315,7 @@ export default {
       return this.$store.getters['characters/characterAttributesEnhancedById'](this.characterId);
     },
     characterSkills() {
+      //console.log(this.$store.getters['characters/characterSkillsById'](this.characterId));
       return this.$store.getters['characters/characterSkillsById'](this.characterId);
     },
     characterTraits() {
@@ -315,9 +383,34 @@ export default {
       const newValue = this.characterSkills[skill] - 1;
       this.$store.commit('characters/setCharacterSkill', { id: this.characterId, payload: { key: skill, value: newValue } });
     },
+    //Бонус Мастерства к навыку
+    characterIsProfiency(skill) {
+      const newValue = this.characterSkills.find((skill) => this.characterSkills.name == skill.key);
+      return newValue.isProfiency;
+    },
+    incrementProfiencySkill(skill) {
+       const newValue = this.characterSkills[this.characterSkills.map((skill) => skill.name).indexOf(skill.key)];
+       const val = newValue.value + 3;
+       this.$store.commit('characters/setCharacterSkill', { id: this.characterId, payload: { key: skill.key, val: val, value: newValue } });
+       this.$store.commit('characters/setCharacterProfiencySkill', { id: this.characterId, payload: { key: skill, val: true, value: newValue } });
+    },
+    decrementProfiencySkill(skill) {
+      const newValue = this.characterSkills[this.characterSkills.map((skill) => skill.name).indexOf(skill.key)];
+      const val = newValue.value - 3;
+      this.$store.commit('characters/setCharacterSkill', { id: this.characterId, payload: { key: skill, val: val, value: newValue } });
+      this.$store.commit('characters/setCharacterProfiencySkill', { id: this.characterId, payload: { key: skill, val: false, value: newValue } });
+    },
     incrementAttribute(attribute) {
       const newValue = this.characterAttributes[attribute] + 1;
       this.$store.commit('characters/setCharacterAttribute', { id: this.characterId, payload: { key: attribute, value: newValue } });
+    },
+    trackingProfiencySkill(skill) {
+        if(skill.isProfiency) {
+          this.incrementProfiencySkill(skill);
+        }
+        else {
+           this.decrementProfiencySkill(skill);
+        }
     },
     decrementAttribute(attribute) {
       const newValue = this.characterAttributes[attribute] - 1;
@@ -364,12 +457,21 @@ export default {
       }
       return 8;
     },
+    computeProfiencyPool(skill){
+      const index = this.characterSkills.map((skill) => skill.name).indexOf(skill.key);
+        // console.log(skill.name, this.characterSkills[skill.key], Math.floor((attribute - 10) / 2), skill);
+        const newValue = this.characterSkills[index];
+         this.isProfiency[newValue.name] = newValue.isProfiency;
+        return newValue.isProfiency;
+    },
     computeSkillPool(skill) {
       const attribute = this.characterAttributesEnhanced[skill.attribute.toLowerCase()];
       if (attribute) {
-        return attribute + this.characterSkills[skill.key];
+        const index = this.characterSkills.map((skill) => skill.name).indexOf(skill.key);
+        const newValue = this.characterSkills[index];
+        return Math.floor((attribute - 10) / 2) + newValue.value;
       }
-      return this.characterSkills[skill.key];
+      // return this.characterSkills[skill.key];
     },
     ensurePrerequisites() {
       const archetype = this.archetype;
@@ -398,5 +500,4 @@ export default {
 };
 </script>
 
-<style scoped lang="css">
-</style>
+<style scoped lang="css"></style>
