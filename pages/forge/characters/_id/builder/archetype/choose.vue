@@ -23,30 +23,29 @@
       :fullscreen="$vuetify.breakpoint.xsOnly"
     >
       <v-card class="pa-0">
-        <v-card-title style="background-color: #262e37; color: #fff;">
+        <v-card-title style="background-color: #262e37; color: #fff">
           <span>Build Advanced Character</span>
           <v-spacer />
-          <v-icon dark @click="advancedKeywordsDialog = false">
-            close
-          </v-icon>
+          <v-icon dark @click="advancedKeywordsDialog = false"> close </v-icon>
         </v-card-title>
         <v-card-text class="pt-8">
-
-          <v-alert
-            type="info"
-            dense outlined border="left"
-            class="caption pb-4"
-          >Advanced Character Creation is described on CORE pg. 38 and allows for more influence on Keywords and Wargear at the cost of a dedicated archetype ability.</v-alert>
+          <v-alert type="info" dense outlined border="left" class="caption pb-4"
+            >Advanced Character Creation is described on CORE pg. 38 and allows
+            for more influence on Keywords and Wargear at the cost of a
+            dedicated archetype ability.</v-alert
+          >
 
           <v-select
-            dense outlined
+            dense
+            outlined
             label="Select the tier, defining your access to wargear"
             v-model="advancedTier"
             :items="advancedTierOptions"
           />
 
           <v-select
-            dense outlined
+            dense
+            outlined
             label="Select a faction or stay unaligned"
             v-model="advancedFaction"
             :items="allArchetypeFactions"
@@ -59,7 +58,9 @@
             class="mb-4"
             hint="Work with your GM/Group to define keywords"
             v-model="advancedKeywords"
-            :items="keywordCombinedRepository.filter((k) => !k.name.startsWith('['))"
+            :items="
+              keywordCombinedRepository.filter((k) => !k.name.startsWith('['))
+            "
             item-text="name"
             item-value="key"
             multiple
@@ -79,13 +80,16 @@
             <template v-slot:item="data">
               <v-list-item-content>
                 <v-list-item-title v-html="data.item.name"></v-list-item-title>
-                <v-list-item-subtitle>{{data.item.type}}</v-list-item-subtitle>
+                <v-list-item-subtitle>{{
+                  data.item.type
+                }}</v-list-item-subtitle>
               </v-list-item-content>
             </template>
           </v-autocomplete>
 
           <v-text-field
-            dense outlined
+            dense
+            outlined
             placeholder="Unaligned Rascal"
             v-model="advancedName"
             label="A short name, describing this 'Archetype'"
@@ -107,19 +111,40 @@
           >
             <template v-slot:item="data">
               <v-list-item-content>
-                <v-list-item-title>{{data.item.name}} {{data.item.tier*10}} XP</v-list-item-title>
-                <v-list-item-subtitle>{{data.item.archetypeFeatures.map((f) => f.name).join(' • ')}}</v-list-item-subtitle>
+                <v-list-item-title
+                  >{{ data.item.name }}
+                  {{ data.item.tier * 10 }} XP</v-list-item-title
+                >
+                <v-list-item-subtitle>{{
+                  data.item.archetypeFeatures.map((f) => f.name).join(" • ")
+                }}</v-list-item-subtitle>
               </v-list-item-content>
             </template>
           </v-autocomplete>
-
         </v-card-text>
         <v-card-actions>
-          <v-btn left outlined color="red" @click="advancedKeywordsDialog = false">
+          <v-btn
+            left
+            outlined
+            color="red"
+            @click="advancedKeywordsDialog = false"
+          >
             Cancel
           </v-btn>
           <v-spacer />
-          <v-btn right color="success" @click="createAdvancedArchetype(advancedName, advancedFaction, advancedKeywords, advancedTier, advancedArchetype)">
+          <v-btn
+            right
+            color="success"
+            @click="
+              createAdvancedArchetype(
+                advancedName,
+                advancedFaction,
+                advancedKeywords,
+                advancedTier,
+                advancedArchetype
+              )
+            "
+          >
             Confirm choices
           </v-btn>
         </v-card-actions>
@@ -127,17 +152,15 @@
     </v-dialog>
 
     <v-col>
-      <h1 class="headline">
-        Select an Archetype
-      </h1>
+      <h1 class="headline">Выберите Архетип</h1>
 
-      <v-alert
+      <!-- <v-alert
         :value="!characterSpeciesLabel"
         type="warning"
         dense
       >
         You need to select a Species first.
-      </v-alert>
+      </v-alert> -->
     </v-col>
 
     <v-col :cols="12">
@@ -156,26 +179,20 @@
           <v-divider />
           <v-list subheader>
             <v-subheader>Advanced Character Creation</v-subheader>
-            <v-list-item
-              two-line
-              @click.stop="advancedKeywordsDialog = true"
-            >
+            <v-list-item two-line @click.stop="advancedKeywordsDialog = true">
               <v-list-item-avatar tile>
-                <img :src="getAvatar()">
+                <img :src="getAvatar()" />
               </v-list-item-avatar>
               <v-list-item-content>
-                <v-list-item-title>
-                  Unaligned Rascal
-                </v-list-item-title>
-                <v-list-item-subtitle>Select a faction, keywords and tier...</v-list-item-subtitle>
+                <v-list-item-title> Unaligned Rascal </v-list-item-title>
+                <v-list-item-subtitle
+                  >Select a faction, keywords and tier...</v-list-item-subtitle
+                >
               </v-list-item-content>
             </v-list-item>
           </v-list>
         </div>
-        <div
-          v-for="(group, key) in archetypeFaction"
-          :key="key"
-        >
+        <div v-for="(group, key) in archetypeFaction" :key="key">
           <v-divider />
 
           <v-list v-if="archetypesByFaction(group).length > 0" subheader>
@@ -189,21 +206,24 @@
               @click.stop="updatePreview(item)"
             >
               <v-list-item-avatar tile>
-                <img :src="getAvatar(item.key)">
+                <img :src="getAvatar(item.key)" />
               </v-list-item-avatar>
 
               <v-list-item-content>
                 <v-list-item-title>
                   {{ item.name }}
                   <v-chip
-                    v-if="item.source && !['core', 'coreab'].includes(item.source.key)"
+                    v-if="
+                      item.source &&
+                      !['core', 'coreab'].includes(item.source.key)
+                    "
                     color="info"
                     outlined
                     tags
                     x-small
                     label
                   >
-                    {{item.source.key.toUpperCase()}}
+                    {{ item.source.key.toUpperCase() }}
                   </v-chip>
                 </v-list-item-title>
                 <v-list-item-subtitle>{{ item.hint }}</v-list-item-subtitle>
@@ -211,9 +231,7 @@
 
               <v-list-item-action class="hidden-sm-and-up">
                 <v-btn dense icon>
-                  <v-icon color="primary">
-                    arrow_forward_ios
-                  </v-icon>
+                  <v-icon color="primary"> arrow_forward_ios </v-icon>
                 </v-btn>
               </v-list-item-action>
               <v-list-item-action class="hidden-xs-only">
@@ -241,14 +259,14 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
-import ArchetypePreview from '~/components/forge/ArchetypePreview';
-import KeywordRepositoryMixin from '~/mixins/KeywordRepositoryMixin';
+import { mapMutations } from "vuex";
+import ArchetypePreview from "~/components/forge/ArchetypePreview";
+import KeywordRepositoryMixin from "~/mixins/KeywordRepositoryMixin";
 
 export default {
-  name: 'ArchetypeChoose',
+  name: "ArchetypeChoose",
   components: { ArchetypePreview },
-  mixins: [ KeywordRepositoryMixin ],
+  mixins: [KeywordRepositoryMixin],
   asyncData({ params }) {
     return {
       characterId: params.id,
@@ -260,21 +278,21 @@ export default {
       selectedItem: undefined, // for he preview dialog box
       previewDialog: false,
       previewItem: undefined,
-      searchQuery: '',
+      searchQuery: "",
       characterSpecies: undefined,
       characterFactions: undefined,
       // advanced character creation
-      advancedName: 'Unaligned Scoundrel',
+      advancedName: "Unaligned Scoundrel",
       advancedKeywordsDialog: false,
       advancedFaction: undefined,
       advancedKeywords: [],
       advancedArchetype: undefined,
       advancedTier: 1,
       advancedTierOptions: [
-        { text: '1 - One among billions', value: 1, naming: 'Unknown' },
-        { text: '2 - Stalwart Defenders', value: 2, naming: 'Tested' },
-        { text: '3 - Elite Guardians', value: 3, naming: 'Veteran' },
-        { text: '4 - Heroic Operatives', value: 4, naming: 'Heroic' },
+        { text: "1 - One among billions", value: 1, naming: "Unknown" },
+        { text: "2 - Stalwart Defenders", value: 2, naming: "Tested" },
+        { text: "3 - Elite Guardians", value: 3, naming: "Veteran" },
+        { text: "4 - Heroic Operatives", value: 4, naming: "Heroic" },
         // { text: '5 - Agents of Fate', value: 5 },
       ],
     };
@@ -282,25 +300,33 @@ export default {
   computed: {
     sources() {
       return [
-        'core',
-        'fspg',
-        'red1',
-        'cos',
+        "core",
+        "fspg",
+        "red1",
+        "cos",
         // 'tnh',
-        ...this.settingHomebrews
+        ...this.settingHomebrews,
       ];
     },
     settingHomebrews() {
-      return this.$store.getters['characters/characterSettingHomebrewsById'](this.characterId);
+      return this.$store.getters["characters/characterSettingHomebrewsById"](
+        this.characterId
+      );
     },
     characterSettingTier() {
-      return this.$store.getters['characters/characterSettingTierById'](this.characterId);
+      return this.$store.getters["characters/characterSettingTierById"](
+        this.characterId
+      );
     },
     characterSpeciesLabel() {
-      return this.$store.getters['characters/characterSpeciesLabelById'](this.characterId);
+      return this.$store.getters["characters/characterSpeciesLabelById"](
+        this.characterId
+      );
     },
-    characterSpeciesKey(){
-      return this.$store.getters['characters/characterSpeciesKeyById'](this.characterId);
+    characterSpeciesKey() {
+      return this.$store.getters["characters/characterSpeciesKeyById"](
+        this.characterId
+      );
     },
     allArchetypeFactions() {
       if (this.itemList !== undefined) {
@@ -308,17 +334,31 @@ export default {
 
         if (this.characterSpecies) {
           archetypes = archetypes.filter((a) => {
-            if ( a.species.some((s) => s.key.includes(this.characterSpecies.key) ) ) return true;
-            if ( a.species.some((s) => s.key.includes(this.characterSpecies.variant) ) ) return true;
+            if (
+              a.species.some((s) => s.key.includes(this.characterSpecies.key))
+            )
+              return true;
+            if (
+              a.species.some((s) =>
+                s.key.includes(this.characterSpecies.variant)
+              )
+            )
+              return true;
             return false;
           });
 
           if (this.characterSpecies.archetypeRestrictionsMaxTier) {
-            archetypes = archetypes.filter((a) => a.tier <= this.characterSpecies.archetypeRestrictionsMaxTier);
+            archetypes = archetypes.filter(
+              (a) =>
+                a.tier <= this.characterSpecies.archetypeRestrictionsMaxTier
+            );
           }
         }
 
-        return [ 'Unaligned', ...new Set(archetypes.map((item) => item.faction))];
+        return [
+          "Unaligned",
+          ...new Set(archetypes.map((item) => item.faction)),
+        ];
       }
 
       return [];
@@ -329,30 +369,50 @@ export default {
 
         if (this.characterSpecies) {
           archetypes = archetypes.filter((a) => {
-            if ( a.species.some((s) => s.key.includes(this.characterSpecies.key) ) ) return true;
-            if ( a.species.some((s) => s.key.includes(this.characterSpecies.variant) ) ) return true;
+            if (
+              a.species.some((s) => s.key.includes(this.characterSpecies.key))
+            )
+              return true;
+            if (
+              a.species.some((s) =>
+                s.key.includes(this.characterSpecies.variant)
+              )
+            )
+              return true;
             return false;
           });
 
           if (this.characterSpecies.archetypeRestrictionsMaxTier) {
-            archetypes = archetypes.filter((a) => a.tier <= this.characterSpecies.archetypeRestrictionsMaxTier);
+            archetypes = archetypes.filter(
+              (a) =>
+                a.tier <= this.characterSpecies.archetypeRestrictionsMaxTier
+            );
           }
         }
 
         if (this.characterSettingTier !== undefined) {
-          archetypes = archetypes.filter((a) => a.tier <= this.characterSettingTier);
+          archetypes = archetypes.filter(
+            (a) => a.tier <= this.characterSettingTier
+          );
         }
 
-        return [ 'Unaligned', ...new Set(archetypes.map((item) => item.faction))];
+        return [
+          "Unaligned",
+          ...new Set(archetypes.map((item) => item.faction)),
+        ];
       }
 
       return [];
     },
     characterAttributes() {
-      return this.$store.getters['characters/characterAttributesById'](this.characterId);
+      return this.$store.getters["characters/characterAttributesById"](
+        this.characterId
+      );
     },
     characterSkills() {
-      return this.$store.getters['characters/characterSkillsById'](this.characterId);
+      return this.$store.getters["characters/characterSkillsById"](
+        this.characterId
+      );
     },
   },
   watch: {
@@ -375,18 +435,21 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('characters', ['setCharacterArchetype','setCharacterFaction']),
+    ...mapMutations("characters", [
+      "setCharacterArchetype",
+      "setCharacterFaction",
+    ]),
     async getArchetypeList(sources) {
       const config = {
         params: {
-          source: sources.join(','),
+          source: sources.join(","),
         },
       };
-      const { data } = await this.$axios.get('/api/archetypes/', config);
+      const { data } = await this.$axios.get("/api/archetypes/", config);
       this.itemList = data.filter((i) => i.hint);
     },
     async loadSpecies(key) {
-      if ( key ) {
+      if (key) {
         const { data } = await this.$axios.get(`/api/species/${key}`);
         this.characterSpecies = data;
       }
@@ -394,37 +457,45 @@ export default {
     async loadFactions(sources) {
       const config = {
         params: {
-          source: sources.join(','),
+          source: sources.join(","),
         },
       };
       const { data } = await this.$axios.get(`/api/factions/`, config);
       this.characterFactions = data;
     },
     getAvatar(key) {
-      if (key === undefined || key === 'advanced' ) return '/img/avatar_placeholder.png';
+      if (key === undefined || key === "advanced")
+        return "/img/avatar_placeholder.png";
       return `/img/avatars/archetype/${key}.png`;
     },
     archetypesByFaction(groupName) {
       let archetypes = this.itemList;
-
+      return archetypes;
       /* filter by archetype group */
       archetypes = archetypes.filter((a) => a.faction === groupName);
 
       if (this.characterSpecies) {
         archetypes = archetypes.filter((a) => {
-          if ( a.species.some((s) => s.key.includes(this.characterSpecies.key) ) ) return true;
-          if ( a.species.some((s) => s.key.includes(this.characterSpecies.variant) ) ) return true;
+          if (a.species.some((s) => s.key.includes(this.characterSpecies.key)))
+            return true;
+          if (
+            a.species.some((s) => s.key.includes(this.characterSpecies.variant))
+          )
+            return true;
           return false;
         });
 
         if (this.characterSpecies.archetypeRestrictionsMaxTier) {
-          archetypes = archetypes.filter((a) => a.tier <= this.characterSpecies.archetypeRestrictionsMaxTier);
+          archetypes = archetypes.filter(
+            (a) => a.tier <= this.characterSpecies.archetypeRestrictionsMaxTier
+          );
         }
-
       }
 
       if (this.characterSettingTier !== undefined) {
-        archetypes = archetypes.filter((a) => a.tier <= this.characterSettingTier);
+        archetypes = archetypes.filter(
+          (a) => a.tier <= this.characterSettingTier
+        );
       }
 
       /* filter by search query */
@@ -436,7 +507,15 @@ export default {
         });
       }
 
-      return archetypes.sort((a, b) => { if (a.tier > b.tier) { return 1; } if (b.tier > a.tier) { return -1; } return 0; });
+      return archetypes.sort((a, b) => {
+        if (a.tier > b.tier) {
+          return 1;
+        }
+        if (b.tier > a.tier) {
+          return -1;
+        }
+        return 0;
+      });
     },
     updatePreview(item) {
       this.previewItem = item;
@@ -445,56 +524,101 @@ export default {
     createAdvancedArchetype(name, factionName, keywords, tier, archetype) {
       const id = this.characterId;
 
-      const settingTier = this.$store.getters['characters/characterSettingTierById'](this.characterId);
+      const settingTier = this.$store.getters[
+        "characters/characterSettingTierById"
+      ](this.characterId);
       let cost = -1 * settingTier * 10;
       cost += archetype ? archetype.tier * 10 : 0;
 
       const mimic = archetype ? archetype.key : undefined;
 
-      this.$store.commit('characters/clearCharacterEnhancementsBySource', { id, source: 'archetype' });
-      this.$store.commit('characters/clearCharacterKeywordsBySource', { id, source: 'archetype', cascade: true });
+      this.$store.commit("characters/clearCharacterEnhancementsBySource", {
+        id,
+        source: "archetype",
+      });
+      this.$store.commit("characters/clearCharacterKeywordsBySource", {
+        id,
+        source: "archetype",
+        cascade: true,
+      });
 
-      let faction = { key: 'core-unaligned', name: factionName };
-      const factionData = this.characterFactions.find((f) =>  f.name === factionName);
+      let faction = { key: "core-unaligned", name: factionName };
+      const factionData = this.characterFactions.find(
+        (f) => f.name === factionName
+      );
       if (factionData) {
         faction = factionData;
       }
 
-      this.setCharacterArchetype({ id, archetype: { key: 'advanced', value: name, cost, tier, keywords, mimic } });
-      this.setCharacterFaction({ id, faction: { key: faction.key, label: faction.name } });
+      this.setCharacterArchetype({
+        id,
+        archetype: {
+          key: "advanced",
+          value: name,
+          cost,
+          tier,
+          keywords,
+          mimic,
+        },
+      });
+      this.setCharacterFaction({
+        id,
+        faction: { key: faction.key, label: faction.name },
+      });
 
       keywords.forEach((k) => {
         const keyword = {
           name: k,
-          source: 'archetype',
-          type: (k.includes('[')) ? 'placeholder' : 'keyword',
+          source: "archetype",
+          type: k.includes("[") ? "placeholder" : "keyword",
           replacement: undefined,
         };
-        this.$store.commit('characters/addCharacterKeyword', { id, keyword });
+        this.$store.commit("characters/addCharacterKeyword", { id, keyword });
       });
 
       this.advancedKeywordsDialog = false;
-      this.$router.push({ name: 'forge-characters-id-builder-archetype-manage', params: { id } });
+      this.$router.push({
+        name: "forge-characters-id-builder-archetype-manage",
+        params: { id },
+      });
     },
     selectArchetypeForChar(item) {
       const id = this.characterId;
 
-      this.setCharacterArchetype({ id, archetype: { key: item.key, value: item.name, cost: item.costs.archetype, tier: item.tier } });
-      this.setCharacterFaction({ id, faction: { key: item.factionKey, label: item.faction } });
+      this.setCharacterArchetype({
+        id,
+        archetype: {
+          key: item.key,
+          value: item.name,
+          cost: item.costs.archetype,
+          tier: item.tier,
+        },
+      });
+      this.setCharacterFaction({
+        id,
+        faction: { key: item.factionKey, label: item.faction },
+      });
 
       // TODO ensure species
 
       // TODO ensure attributes and skills
       this.ensurePrerequisites(item);
 
-      this.$store.commit('characters/clearCharacterEnhancementsBySource', { id: this.characterId, source: 'archetype' });
+      this.$store.commit("characters/clearCharacterEnhancementsBySource", {
+        id: this.characterId,
+        source: "archetype",
+      });
       const mods = [];
       if (item.influence) {
         mods.push({
-          targetGroup: 'traits', targetValue: 'influence', modifier: item.influence, hint: item.name, source: 'archetype',
+          targetGroup: "traits",
+          targetValue: "influence",
+          modifier: item.influence,
+          hint: item.name,
+          source: "archetype",
         });
       }
-      if (item.modifications){
+      if (item.modifications) {
         mods.push(...item.modifications);
       }
       item.archetypeFeatures
@@ -505,43 +629,64 @@ export default {
           });
         });
 
-      this.$store.commit('characters/setCharacterModifications', { id: this.characterId, content: { modifications: mods, source: 'archetype' } });
+      this.$store.commit("characters/setCharacterModifications", {
+        id: this.characterId,
+        content: { modifications: mods, source: "archetype" },
+      });
 
-      this.$store.commit('characters/clearCharacterKeywordsBySource', { id: this.characterId, source: 'archetype', cascade: true });
+      this.$store.commit("characters/clearCharacterKeywordsBySource", {
+        id: this.characterId,
+        source: "archetype",
+        cascade: true,
+      });
       // keywords = String[]
       if (item.keywords) {
-        const itemKeywords = item.keywords.split(',').map((i) => i.trim());
+        const itemKeywords = item.keywords.split(",").map((i) => i.trim());
         itemKeywords.forEach((keyword) => {
           const payload = {
             name: keyword,
-            source: 'archetype',
-            type: (keyword.includes('[')) ? 'placeholder' : 'keyword',
+            source: "archetype",
+            type: keyword.includes("[") ? "placeholder" : "keyword",
             replacement: undefined,
           };
-          this.$store.commit('characters/addCharacterKeyword', { id: this.characterId, keyword: payload });
+          this.$store.commit("characters/addCharacterKeyword", {
+            id: this.characterId,
+            keyword: payload,
+          });
         });
       }
 
-      this.$store.commit('characters/clearCharacterPsychicPowersBySource', { id: this.characterId, source: 'archetype' });
-      const featuresWithPowers = item.archetypeFeatures.filter( (f) => f.psychicPowers !== undefined);
-      if ( featuresWithPowers ) {
-        featuresWithPowers.forEach( (feature) => {
-          feature.psychicPowers.forEach( (powerSelections) => {
-            if ( powerSelections.selected ) {
+      this.$store.commit("characters/clearCharacterPsychicPowersBySource", {
+        id: this.characterId,
+        source: "archetype",
+      });
+      const featuresWithPowers = item.archetypeFeatures.filter(
+        (f) => f.psychicPowers !== undefined
+      );
+      if (featuresWithPowers) {
+        featuresWithPowers.forEach((feature) => {
+          feature.psychicPowers.forEach((powerSelections) => {
+            if (powerSelections.selected) {
               const payload = {
                 id: this.characterId,
                 name: powerSelections.selected,
                 cost: 0,
                 source: `archetype.${powerSelections.selected.name}`,
               };
-              this.$store.commit('characters/addCharacterPsychicPower', payload);
+              this.$store.commit(
+                "characters/addCharacterPsychicPower",
+                payload
+              );
             }
           });
         });
       }
 
       this.previewDialog = false;
-      this.$router.push({ name: 'forge-characters-id-builder-archetype-manage', params: { id: this.characterId } });
+      this.$router.push({
+        name: "forge-characters-id-builder-archetype-manage",
+        params: { id: this.characterId },
+      });
     },
     ensurePrerequisites(item) {
       const archetype = item;
@@ -550,16 +695,29 @@ export default {
         archetype.prerequisites.forEach((prerequisite) => {
           // { group: 'attributes', value: 'willpower', threshold: 3, }
           switch (prerequisite.group) {
-            case 'attributes':
-              const attributeValue = this.characterAttributes[prerequisite.value];
+            case "attributes":
+              const attributeValue =
+                this.characterAttributes[prerequisite.value];
               if (attributeValue < prerequisite.threshold) {
-                this.$store.commit('characters/setCharacterAttribute', { id: this.characterId, payload: { key: prerequisite.value, value: prerequisite.threshold } });
+                this.$store.commit("characters/setCharacterAttribute", {
+                  id: this.characterId,
+                  payload: {
+                    key: prerequisite.value,
+                    value: prerequisite.threshold,
+                  },
+                });
               }
               break;
-            case 'skills':
+            case "skills":
               const skillValue = this.characterSkills[prerequisite.value];
               if (skillValue < prerequisite.threshold) {
-                this.$store.commit('characters/setCharacterSkill', { id: this.characterId, payload: { key: prerequisite.value, value: prerequisite.threshold } });
+                this.$store.commit("characters/setCharacterSkill", {
+                  id: this.characterId,
+                  payload: {
+                    key: prerequisite.value,
+                    value: prerequisite.threshold,
+                  },
+                });
               }
               break;
           }
@@ -570,6 +728,4 @@ export default {
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

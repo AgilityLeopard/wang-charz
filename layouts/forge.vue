@@ -34,9 +34,9 @@
             </v-list-item-content>
 
             <v-list-item-action>
-              <span v-if="entry.cost !== null">{{ entry.cost }} XP</span>
-              <span v-else-if="entry.cost === null"></span>
-              <v-icon v-else>info</v-icon>
+              <!-- <span v-if="entry.cost !== null">{{ entry.cost }} XP</span> -->
+              <!-- <span v-else-if="entry.cost === null"></span> -->
+              <!-- <v-icon v-else>info</v-icon> -->
             </v-list-item-action>
           </v-list-item>
         </div>
@@ -55,7 +55,7 @@
 
       <v-toolbar-title>
         <nuxt-link to="/" class="title brand-logo brand-logo__text">
-          Doctors of Doom
+          Shadow Tales
         </nuxt-link>
       </v-toolbar-title>
 
@@ -67,17 +67,17 @@
         <v-btn
           class="d-none d-md-inline-flex"
           icon
-          href="https://discordapp.com/channels/256930339878993920/600107858486493193"
+          href="https://discord.gg/r24AeUdcHu"
         >
           <v-icon>mdi-discord</v-icon>
         </v-btn>
-        <v-btn
+        <!-- <v-btn
           class="d-none d-md-inline-flex"
           icon
           href="https://twitter.com/doctors_of_doom"
         >
           <v-icon color="#1DA1F2">mdi-twitter</v-icon>
-        </v-btn>
+        </v-btn> -->
         <v-btn icon @click="toggleDarkTheme">
           <v-icon>mdi-brightness-6</v-icon>
         </v-btn>
@@ -244,7 +244,7 @@
       </div>
       <v-spacer />
       <span>&copy; {{ new Date().getFullYear() }}</span
-      ><span class="d-none d-md-block">&nbsp;Doctors of Doom</span>
+      ><span class="d-none d-md-block">&nbsp;Shadow Tales</span>
     </v-footer>
   </v-app>
 </template>
@@ -314,14 +314,14 @@ export default {
           path: this.routes.species,
           hint: "Вид",
           text: this.characterSpeciesLabel,
-          cost: this.characterSpeciesCost,
+          // cost: this.characterSpeciesCost,
         },
         {
           id: 2,
           path: this.routes.archetype,
           hint: "Класс",
           text: this.characterArchetype,
-          cost: this.characterArchetypeCost,
+          // cost: this.characterArchetypeCost,
         },
         // {
         //   id: 3,
@@ -333,9 +333,9 @@ export default {
         {
           id: 4,
           path: this.routes.stats,
-          hint: "Stats",
-          text: "Attributes & Skills",
-          cost: this.characterAttributeCost + this.characterSkillCost,
+          hint: "Статисткиа",
+          text: "Характеристики и Навыки",
+          // cost: this.characterAttributeCost + this.characterSkillCost,
         },
         // {
         //   id: 5,

@@ -41,9 +41,8 @@ const source = {
   //Homebrews
   rotss: { book: "Рейдеры Змеиного моря", key: "rotss", version: "", path: "" },
 
-  // Doctors of Doom
   dod: {
-    book: "Doctors of Doom Compendium",
+    book: "Shadow Tales Compendium",
     key: "dod",
     version: "",
     path: "",

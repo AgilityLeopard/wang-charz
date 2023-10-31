@@ -39,11 +39,11 @@
 
         <v-btn large color="primary" outlined @click="importDialog = true">
           <v-icon left>cloud_upload</v-icon>
-          Import a Character
+          Импорт персонажей
         </v-btn>
 
         <v-btn large color="primary" outlined nuxt to="/forge/species">
-          Custom Species
+          Своя раса
         </v-btn>
 
         <v-dialog
@@ -86,7 +86,7 @@
         :cols="12"
       >
         <v-alert type="info" prominent text border="left" color="primary">
-          Just hit <strong>Create a Character</strong> and start building.
+          Просто нажмите <strong>Создать персонажа</strong> и начните билдиться
         </v-alert>
         <v-alert
           v-if="false"
@@ -149,7 +149,7 @@
           </p>
         </v-alert>
 
-        <v-row justify="center" v-if="hasUnmigratedCharacters">
+        <!-- <v-row justify="center" v-if="hasUnmigratedCharacters">
           <v-col :cols="12" :sm="12" :md="12" :lg="8">
             <v-card>
               <v-card-title>Updates Available</v-card-title>
@@ -178,7 +178,7 @@
               </v-card-actions>
             </v-card>
           </v-col>
-        </v-row>
+        </v-row> -->
 
         <v-row justify="left">
           <v-col
@@ -239,13 +239,13 @@
                       >
                     </div>
 
-                    <div>
+                    <!-- <div>
                       <span
                         >Rank {{ characterRank(character.id) }} •
                         {{ characterSpendBp(character.id) }} /
                         {{ characterTotalBp(character.id) }} XP</span
                       >
-                    </div>
+                    </div> -->
                   </div>
                 </v-card-text>
               </div>
@@ -253,7 +253,7 @@
               <v-divider />
 
               <v-card-text class="pa-2 card__campaign-container">
-                <strong>Tier {{ characterSettingTier(character.id) }}:</strong>
+                <strong>Уровень {{ characterLevel(character.id) }}:</strong>
                 <em>{{ characterSettingTitle(character.id) }}</em>
               </v-card-text>
 
@@ -269,7 +269,7 @@
                   :disabled="characterVersion(character.id) < builderVersion"
                 >
                   <v-icon left small> edit </v-icon>
-                  Edit
+                  Редактировать
                 </v-btn>
                 <v-btn
                   nuxt
@@ -280,7 +280,7 @@
                   :disabled="characterVersion(character.id) < builderVersion"
                 >
                   <v-icon small left> description </v-icon>
-                  View
+                  Вид
                 </v-btn>
                 <v-btn
                   nuxt
@@ -303,7 +303,7 @@
                   @click="openExportDialog(character.id)"
                 >
                   <v-icon small left>cloud_download</v-icon>
-                  Export
+                  Экспорт
                 </v-btn>
 
                 <v-btn
@@ -312,7 +312,7 @@
                   small
                   @click="openDeleteDialog(character.id)"
                 >
-                  <v-icon small>delete</v-icon>Delete
+                  <v-icon small>delete</v-icon>Удалить
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -354,19 +354,19 @@
           <v-dialog v-model="deleteDialog" width="350" persistent>
             <v-card>
               <v-card-title style="background-color: #262e37; color: #fff">
-                <span>Delete Character confirmation</span>
+                <span>Подтверждение удаления</span>
                 <v-spacer />
                 <v-icon dark @click="deleteDialog = false">close</v-icon>
               </v-card-title>
               <v-card-text>
                 <div class="pt-2 pb-2">
-                  <p>Do you really want to delete the character permanently?</p>
+                  <p>Вы действительно хотите удалить персонажа?</p>
                 </div>
               </v-card-text>
               <v-divider></v-divider>
               <v-card-actions>
                 <v-btn block color="primary" @click="deleteCharacter"
-                  >Delete permanently</v-btn
+                  >Удалить навсегда</v-btn
                 >
               </v-card-actions>
             </v-card>
@@ -374,15 +374,15 @@
         </v-row>
       </v-col>
 
-      <v-col :cols="12">
-        <v-card>
+      <!-- <v-col :cols="12"> -->
+      <!-- <v-card>
           <v-card-text>
-            <h1 class="headline">Character Generator for Wrath and Glory</h1>
+            <h1 class="headline">Билдер</h1>
             <p>
-              This
-              <strong>online character generator for Wrath & Glory</strong>
-              allows you to create and
-              <strong>organize multiple characters</strong>. Just define a
+              Это
+              <strong>онлайн билдер</strong>
+                позволяющий создать 
+              <strong>нескольких персонажей</strong>. Just define a
               Setting with a fitting Tier and start building. For severe issues,
               feedback and ideas, reach out to me via
               <a href="mailto:docsofdoom+forge@gmail.com?subject=Forge Feedback"
@@ -399,8 +399,8 @@
               migrate the existing ones to the new version.
             </p>
           </v-card-text>
-        </v-card>
-      </v-col>
+        </v-card> -->
+      <!-- </v-col> -->
     </v-row>
   </div>
 </template>
@@ -427,8 +427,8 @@ export default {
       deleteId: undefined,
       breadcrumbItems: [
         { text: '', nuxt: true, exact: true, to: '/' },
-        { text: 'Forge', nuxt: true, exact: true, to: '/forge' },
-        { text: 'Characters', nuxt: true, exact: true, to: '/forge/my-characters' },
+        { text: 'Хранилище', nuxt: true, exact: true, to: '/forge' },
+        { text: 'Персонажи', nuxt: true, exact: true, to: '/forge/my-characters' },
       ],
       howTo: {
         steps: [
@@ -557,7 +557,10 @@ export default {
       return this.$store.getters['characters/characterSettingTitleById'](id);
     },
     characterSettingTier(id) {
-      return this.$store.getters['characters/characterSettingTierById'](id);
+      return this.$store.getters['characters/characterSettingierById'](id);
+    },
+    characterLevel(id) {
+      return this.$store.getters['characters/characterLevelById'](id);
     },
     isLegacyVersion(id) {
       return this.characterVersion(id) <= 6;

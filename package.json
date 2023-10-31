@@ -1,11 +1,11 @@
 {
-  "name": "doctors-of-doom",
+  "name": "shadow-tales",
   "version": "7.0.0",
   "engines": {
     "node": "18.x"
   },
-  "description": "The Doctors of Doom exist to serve the Wrath and Glory Community",
-  "author": "Brother Lucius",
+  "description": "Shadow Tales",
+  "author": "Shadow",
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider NODE_ENV=development nuxt",

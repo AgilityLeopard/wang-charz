@@ -581,7 +581,7 @@ export const mutations = {
     const character = state.characters[id];
 
     let newSkill = {};
-    newSkill[skill.key] = 0;
+    newSkill[haracter.skills.las] = 0;
     character.skills = {
       ...character.skills,
       ...newSkill,

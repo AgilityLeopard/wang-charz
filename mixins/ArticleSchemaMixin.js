@@ -2,28 +2,28 @@ export default {
   methods: {
     articleJsonLdSchema(post, image) {
       return {
-        '@context': 'https://schema.org',
-        '@type': 'Article',
+        "@context": "https://schema.org",
+        "@type": "Article",
         datePublished: post.fields.publishedAt,
         dateModified: post.fields.modifiedAt,
         headline: post.fields.title,
         description: post.fields.description,
         image,
         author: {
-          '@type': 'Person',
+          "@type": "Person",
           name: post.fields.author,
         },
-        "publisher": {
+        publisher: {
           "@type": "Organization",
-          "name": "Doctors of Doom",
-          "logo": {
+          name: "Doctors of Doom",
+          logo: {
             "@type": "ImageObject",
-            "url": "https://www.doctors-of-doom.com/android-chrome-192x192.png"
-          }
+            url: "https://www.doctors-of-doom.com/android-chrome-192x192.png",
+          },
         },
-        "mainEntityOfPage": {
+        mainEntityOfPage: {
           "@type": "WebPage",
-          "@id": "https://www.doctors-of-doom.com/posts"
+          "@id": "https://www.doctors-of-doom.com/posts",
         },
       };
     },

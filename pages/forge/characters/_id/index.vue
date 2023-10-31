@@ -154,13 +154,7 @@
             [archetypeLabel, speciesLabel].join(" • ")
           }}</v-col>
           <v-col :cols="12" class="caption">
-            <span>{{
-              [
-                `Тир ${characterSettingTier}`,
-                `Rank ${characterRank}`,
-                `${campaignCustomXp} XP`,
-              ].join(" • ")
-            }}</span>
+            <span>{{ [`Уровень ${characterRank}`].join(" • ") }}</span>
           </v-col>
           <v-col :cols="12" class="caption">
             <v-progress-linear
@@ -270,7 +264,7 @@
 
         <v-row no-gutters>
           <v-col :cols="12" class="pa-1">
-            <v-card>
+            <!-- <v-card>
               <v-card-title
                 style="background-color: hsl(4, 90%, 58%); color: #fff"
                 class="body-1 pt-1 pb-1"
@@ -349,7 +343,6 @@
                       >
                     </td>
                     <td>
-                      <!-- each modifier contains the BASE of the compution, thus we begin at > 1 -->
                       <v-tooltip
                         bottom
                         v-if="
@@ -397,7 +390,8 @@
                   </tr>
                 </tbody>
               </v-simple-table>
-            </v-card>
+            </v-card> 
+            -->
           </v-col>
         </v-row>
       </v-col>
@@ -411,7 +405,7 @@
                 style="background-color: hsl(4, 90%, 58%); color: #fff"
                 class="body-1 pt-1 pb-1"
               >
-                <h2 class="subtitle-1">Skills</h2>
+                <h2 class="subtitle-1">Навыки</h2>
               </v-card-title>
 
               <v-simple-table dense style="overflow-y: auto">
@@ -439,21 +433,21 @@
                       </span>
                     </td>
                     <td class="text-center pa-1 small">
-                      {{ item.adjustedAttributeValue }}
+                      {{ item.value }}
                     </td>
                     <td class="text-center pa-1 small">
                       <span v-if="item.attribute">
-                        {{ item.attribute.substring(0, 3) }}
+                        {{ item.nameAtt.substring(0, 3) }}
                       </span>
                     </td>
-                    <td class="text-center pa-1 small">
+                    <!-- <td class="text-center pa-1 small">
                       {{ computeSkillPool(item)
                       }}<span v-if="item.conditionalAdjustment !== 0"
                         >/{{
                           computeSkillPool(item) + item.conditionalAdjustment
                         }}</span
-                      >
-                    </td>
+                      > 
+                    </td>-->
                     <td class="text-center pa-1 small">
                       <v-tooltip bottom v-if="item.modifiers.length > 0">
                         <template v-slot:activator="{ on }">
@@ -1580,21 +1574,21 @@ export default {
   data() {
     return {
       attributeHeaders: [
-        { text: 'Attribute', sortable: false, align: 'left', class: 'text-left small pa-1' },
-        { text: 'Rating', sortable: false, align: 'center', class: 'text-center small pa-1' },
-        { text: 'Enhanced', sortable: false, align: 'right', class: 'text-center small pa-1' },
-        { text: 'Notes', sortable: false, style: 'center', class: 'text-center small pa-1' },
+        { text: 'Характеристика', sortable: false, align: 'left', class: 'text-left small pa-1' },
+        { text: 'Значение', sortable: false, align: 'center', class: 'text-center small pa-1' },
+        { text: 'Модификатор', sortable: false, align: 'right', class: 'text-center small pa-1' },
+        { text: 'Заметки', sortable: false, style: 'center', class: 'text-center small pa-1' },
       ],
       traitHeaders: [
         { text: 'Trait', sortable: false, align: 'left', class: 'small pa-1' },
         { text: 'Rating', sortable: false, align: 'center', class: 'small pa-1' },
       ],
       skillHeaders: [
-        { text: 'Skill', sortable: false, align: 'left', class: 'text-left small pa-1' },
-        { text: 'Rating', sortable: false, align: 'center', class: 'text-center small pa-1' },
-        { text: 'Att', sortable: false, align: 'center', class: 'text-center small pa-1' },
-        { text: 'Total', sortable: false, align: 'center', class: 'text-center small pa-1' },
-        { text: 'Notes', sortable: false, style: 'center', class: 'text-center small pa-1' },
+        { text: 'Навык', sortable: false, align: 'left', class: 'text-left small pa-1' },
+        { text: 'Значение', sortable: false, align: 'center', class: 'text-center small pa-1' },
+        { text: 'Хар', sortable: false, align: 'center', class: 'text-center small pa-1' },
+        // { text: 'Total', sortable: false, align: 'center', class: 'text-center small pa-1' },
+        { text: 'Заметки', sortable: false, style: 'center', class: 'text-center small pa-1' },
       ],
       weaponHeaders: [
         { text: 'Name', sortable: false, align: 'left', class: 'small pa-1' },
@@ -2030,30 +2024,30 @@ export default {
       let skills = adHocSkillRepository.map((repositorySkill) => {
         const skill = {
           ...repositorySkill,
-          value: characterSkills[repositorySkill.key],
-          enhancedValue: parseInt(characterSkills[repositorySkill.key]),
-          isProfiency: false,
-          rating: characterSkills[repositorySkill.key],
-          adjustedRating: parseInt(characterSkills[repositorySkill.key]),
+          value: characterSkills.find(t => t.name == repositorySkill.key).value,
+          enhancedValue: characterSkills.find(t => t.name == repositorySkill.key).value,
+          isProfiency: characterSkills.find(t => t.name == repositorySkill.key).isProfiency,
+          rating: characterSkills.find(t => t.name == repositorySkill.key).value,
+          adjustedRating: characterSkills.find(t => t.name == repositorySkill.key).value,
           adjustment: 0,
           conditionalAdjustment: 0,
+          nameAtt: '',
           dnPenalty: 0,
           modifiers: [],
           adjustedAttributeValue: 0,
           attributeObject: {},
         };
         const attribute = this.attributes.find((a) => a.key === skill.attribute);
-
         if (attribute) {
           skill.attributeObject = attribute;
           skill.adjustedAttributeValue = attribute.adjustedRating + 3;
+          skill.nameAtt = attribute.name;
         }
         // if (skill.name === 'Intimidation' && this.talents.includes('Imposing Presence')) {
         //   const strength = this.attributes.find((a) => a.name === 'Strength');
         //   skill.attributeObject = strength;
         //   skill.adjustedAttributeValue = strength.adjustedRating;
         // }
-        console.log("отладка скила", skill);
         return skill;
       });
 
