@@ -5,11 +5,11 @@
     <v-col v-if="item" :xs="12">
       <div class="d-flex flex-no-wrap justify-space-between mb-2">
         <div>
-          <h3 class="headline">{{ item.name }}</h3>
+          <h3 class="headline">{{ item.nameClass }}</h3>
           <h4 class="subtitle-2 grey--text">{{ item.hint }}</h4>
           <v-btn small outlined color="primary" @click="doChangeMode">
             <v-icon small>settings</v-icon>
-            change archetype
+            Изменить класс
           </v-btn>
         </div>
         <v-avatar size="96" tile><img :src="avatar" /></v-avatar>
@@ -33,19 +33,22 @@
           >{{ alert.text }}</v-alert
         >
 
-        <p><strong>Tier:</strong> {{ item.tier }}</p>
+        <p>
+          <strong>Хитов на первом уровне:</strong>
+          {{ item.hitLevelOne + modCon }}
+        </p>
 
         <p>
           <strong>Species:</strong>
           {{ item.species.map((s) => s.name).join(", ") }}
         </p>
 
-        <p>
+        <!-- <p>
           <strong>XP Cost:</strong> {{ item.cost }}, incl. Archetype ({{
             item.costs.archetype
           }}
           XP) and Stats ({{ item.costs.stats }} XP)
-        </p>
+        </p> -->
 
         <v-alert
           v-if="item.costs.archetype !== characterArchetypeCost"
@@ -75,30 +78,18 @@
 
         <v-divider class="mb-2"></v-divider>
 
-        <p v-if="attributePrerequisites">
+        <!-- <p v-if="attributePrerequisites">
           <strong>Attributes:</strong> {{ attributePrerequisites }}
-        </p>
+        </p> -->
 
-        <p
+        <!-- <p
           v-if="
             (skillPrerequisites && skillPrerequisites.length > 0) ||
             item.prerequisitesSkillString
           "
-        >
-          <strong>Skills:</strong>
-          <span v-for="(skill, index) in skillPrerequisites">
-            {{ skill.name }} {{ skill.threshold
-            }}<!--
-            <v-icon x-small color="success" v-if="skill.fulfilled">check_circle</v-icon>
-            <v-icon x-small color="warning" v-else-if="!skill.fulfilled">check_circle</v-icon>
-            -->{{ index < skillPrerequisites.length - 1 ? ", " : "" }}
-          </span>
-          <span v-if="item.prerequisitesSkillString">{{
-            item.prerequisitesSkillString
-          }}</span>
-        </p>
+        > -->
 
-        <p v-if="item.influence && item.influence != 0">
+        <!-- <p v-if="item.influence && item.influence != 0">
           <strong>Influence Modifier: </strong>
           {{ `${item.influence > 0 ? "+" : ""}${item.influence}` }}
         </p>
@@ -116,37 +107,52 @@
             }}</span
           >
           <span v-else>none</span>
-        </p>
+        </p> -->
 
-        <div
-          v-for="placeholder in itemKeywordPlaceholders"
-          :key="placeholder.key"
-          class="ml-4 mr-4"
-        >
+        <!-- <div v-for="placeholder in itemKeywordPlaceholders" class="ml-4 mr-4">
           <v-select
             v-model="placeholder.selected"
-            :label="placeholder.name + ' Keyword'"
+            :label="placeholder.name"
             :items="placeholder.options"
             item-text="name"
-            item-value="name"
-            persistent-hint
-            :hint="keywordHint(placeholder.selected, placeholder)"
+            item-value="type"
             solo
             dense
+            persistent-hint
             @change="updateKeyword(placeholder, placeholder.selected)"
           />
+ 
+          v-if="feature.options && feature.options.length > 0"
+        </div> -->
 
-          <p v-if="selectedKeywords[placeholder.name]" class="ma-4">
-            {{ keywordEffect(selectedKeywords[placeholder.name]) }}
-          </p>
-        </div>
-
-        <div v-for="feature in item.archetypeFeatures" class="text-lg-justify">
+        <div v-for="feature in itemKeywordPlaceholders" class="text-lg-justify">
           <div>
-            <strong>{{ feature.name }}</strong>
-            <div v-if="feature.description" v-html="feature.description"></div>
-            <p v-else>{{ feature.snippet }}</p>
-            <v-alert
+            <strong>{{ feature.feature.name }}</strong>
+            <div
+              v-if="feature.feature.snippet"
+              v-html="feature.feature.snippet"
+            ></div>
+            <v-select
+              v-if="feature.options"
+              v-model="feature.selected"
+              :label="feature.name"
+              :items="feature.options"
+              :item-text="(item) => item.name"
+              :item-value="(item) => item.type"
+              :hint="feature.selected.description"
+              solo
+              dense
+              persistent-hint
+              return-object
+              @change="updateKeyword(feature, feature.selected)"
+            />
+
+            <!-- <p>
+              <strong>Influence Modifier: </strong>
+              {{ `${feature.description}` }}
+            </p> -->
+
+            <!-- <v-alert
               v-if="feature.alerts"
               v-for="(alert, index) in feature.alerts"
               :key="index"
@@ -154,14 +160,11 @@
               dense
               text
               >{{ alert.text }}</v-alert
-            >
+            > -->
           </div>
-
-          <div
-            v-if="feature.options && feature.options.length > 0"
-            class="ml-4 mr-4"
-          >
-            <div v-for="inx in feature.selected.length">
+          <!-- 
+          <div class="ml-4 mr-4">
+            <div v-for="inx in feature.options.length">
               <v-select
                 :items="feature.options"
                 v-model="feature.selected[inx - 1]"
@@ -199,7 +202,7 @@
                 </p>
               </div>
             </div>
-          </div>
+          </div> -->
 
           <!-- features with CORRUPTION -->
           <div v-if="feature.corruption">
@@ -306,6 +309,8 @@ export default {
     return {
       loading: false,
       item: undefined,
+      classFeature: [],
+      FeatureChoice: [],
     };
   },
   computed: {
@@ -313,6 +318,15 @@ export default {
       return this.$store.getters["characters/characterSettingTierById"](
         this.characterId
       );
+    },
+    modCon() {
+      const attribute = this.$store.getters[
+        "characters/characterAttributesById"
+      ](this.characterId);
+
+      if (attribute) {
+        return Math.floor((attribute.constitution - 10) / 2);
+      }
     },
     characterFactionKey() {
       return this.$store.getters["characters/characterFactionKeyById"](
@@ -398,6 +412,11 @@ export default {
       // }
       return this.item.attributes;
     },
+    selectedFeatureChoice() {
+      return this.$store.getters["characters/characterFeatureChoiceById"](
+        this.characterId
+      );
+    },
     skillPrerequisites() {
       // if (this.item && this.item.prerequisites) {
       //   return this.item.prerequisites
@@ -442,36 +461,66 @@ export default {
       }
       return selectedKeywords;
     },
+    selectedDescription(placeholder, selected) {
+      if (selected !== undefined) {
+        const Desc = placeholder.option.find(
+          (k) => k.type.toLowerCase() !== selected.toLowerCase()
+        ).description;
+        return Desc;
+      }
+
+      return "none";
+    },
     itemKeywordPlaceholders() {
-      const placeholderKeywords = this.item.keywords
-        .split(",")
-        .map((i) => i.trim())
-        .filter((k) => k.includes("["));
+      // const placeholderKeywords = this.item.keywords
+      //   .split(",")
+      //   .map((i) => i.trim())
+      //   .filter((k) => k.includes("["));
 
       const placeholderSet = [];
-
-      placeholderKeywords.forEach((placeholder) => {
-        let wordy = {};
-        if (placeholder.toLowerCase() === "[any]") {
-          const levelOneKeywords = this.keywordRepository.filter(
-            (k) => k.name.toLowerCase() !== placeholder.toLowerCase()
-          );
-          wordy = {
-            name: placeholder,
-            options: levelOneKeywords,
-            selected: "",
-          };
-        } else {
+      const featureChoice = this.selectedFeatureChoice;
+      this.item.classFeature.forEach((placeholder) => {
+        if (placeholder.options) {
+          let wordy = {};
           const subKeywords = this.keywordSubwordRepository.filter(
-            (k) => k.placeholder.toLowerCase() === placeholder.toLowerCase()
+            (k) =>
+              k.placeholder.toLowerCase() === placeholder.options.toLowerCase()
           );
-          wordy = { name: placeholder, options: subKeywords, selected: "" };
+          const selected = this.selectedFeatureChoice.find(
+            (k) => k.name.toLowerCase() === placeholder.options.toLowerCase()
+          )
+            ? this.selectedFeatureChoice.find(
+                (k) =>
+                  k.name.toLowerCase() === placeholder.options.toLowerCase()
+              ).replacement
+            : {};
+
+          wordy = {
+            // name: Keywords[0].name,
+            options: subKeywords,
+            feature: placeholder,
+            selected: selected,
+            description: "",
+          };
+
+          placeholderSet.push(wordy);
+        } else {
+          let wordy = {};
+          wordy = {
+            // name: Keywords[0].name,
+            // options: subKeywords,
+            feature: placeholder,
+            // selected: selected,
+            description: "",
+          };
+          placeholderSet.push(wordy);
         }
-        if (this.selectedKeywords[placeholder]) {
-          wordy.selected = this.selectedKeywords[placeholder];
-        }
-        placeholderSet.push(wordy);
       });
+
+      if (placeholderSet) {
+        const level = this.characterLevel(this.characterId);
+        return placeholderSet.filter((k) => k.feature.level <= level);
+      }
 
       return placeholderSet;
     },
@@ -511,6 +560,24 @@ export default {
     },
   },
   methods: {
+    characterLevel(id) {
+      return this.$store.getters["characters/characterLevelById"](id);
+    },
+    characterVariantHP(id) {
+      return this.$store.getters["characters/characterVariantHpById"](id);
+    },
+    setHpCharacter(hp) {
+      this.$store.commit("characters/setHpCharacter", {
+        id: this.characterId,
+        hp,
+      });
+    },
+    setHitDice(hp) {
+      this.$store.commit("characters/setHitDice", {
+        id: this.characterId,
+        hp,
+      });
+    },
     async loadAdvancedArchetype() {
       this.loading = true;
       console.info(`loading advanced character pseudo archetype...`);
@@ -572,6 +639,17 @@ export default {
       // finalData = this.enrichArchetypeFeatures(finalData);
 
       this.item = finalData;
+      const hp = [{ level: 1, hp: this.item.hitLevelOne + this.modCon }];
+      const hd = parseInt(this.item.hitDice.substring(1));
+      const level = this.characterLevel(this.characterId);
+      for (let i = 2; i <= parseInt(level); i++) {
+        hp.push({
+          level: i,
+          hp: Math.floor(hd / 2) + 1 + this.modCon,
+        });
+      }
+      this.setHpCharacter(hp);
+      this.setHidDice(this.item.hitDice);
       this.loading = false;
     },
     enrichArchetypeFeatures(archetype) {
@@ -658,8 +736,8 @@ export default {
       }
     },
     keywordHint(keyword, parentKeyword) {
-      let foundKeyword = this.keywordCombinedRepository.find(
-        (k) => k.name.toLowerCase() === keyword.toLowerCase()
+      let foundKeyword = this.keywordSubwordRepository.find(
+        (k) => k.type.toLowerCase() === keyword.toLowerCase()
       );
       if (foundKeyword !== undefined) {
         return foundKeyword.description;
@@ -681,7 +759,6 @@ export default {
      */
     updateKeyword(placeholder, selection) {
       console.log(`selected ${selection} for ${placeholder.name}`);
-
       this.$store.commit("characters/replaceCharacterKeywordPlaceholder", {
         id: this.characterId,
         // the name of the keyword to be replaced
@@ -692,6 +769,11 @@ export default {
         source: "archetype",
       });
       placeholder.selected = selection;
+      if (selection) {
+        placeholder.description = placeholder.options.find(
+          (k) => k.type.toLowerCase() === selection.type.toLowerCase()
+        ).description;
+      }
     },
     changeSelectedOption(feature, inx) {
       const selectedOption = feature.options.find(

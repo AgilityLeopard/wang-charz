@@ -41,6 +41,8 @@ export const getters = {
     state.characters[id] ? state.characters[id].settingTier : 1,
   characterLevelById: (state) => (id) =>
     state.characters[id] ? state.characters[id].level : 1,
+  characterVariantHpById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].VariantHp : "Avg",
   characterSettingTitleById: (state) => (id) =>
     state.characters[id]
       ? state.characters[id].settingTitle
@@ -260,11 +262,14 @@ export const getters = {
     });
     return enhanced;
   },
-  characterSkillsById: (state, getters) => (id) => {
+  characterSkillsById: (state) => (id) => {
     // console.log(state.characters[id].skills);
     return state.characters[id] ? state.characters[id].skills : [];
   },
-
+  characterFeatureChoiceById: (state) => (id) => {
+    // console.log(state.characters[id].skills);
+    return state.characters[id] ? state.characters[id].featureChoice : [];
+  },
   characterTraitsById: (state, getters) => (id) => {
     const character = state.characters[id];
     const enhancedAttributes = getters.characterAttributesEnhancedById(id);
@@ -471,7 +476,13 @@ export const getters = {
     }
     return character.wealth.spend;
   },
-
+  characterLevelHitPointById: (state) => (id) => {
+    const character = state.characters[id];
+    if (character === undefined) {
+      return [];
+    }
+    return character.levelHitPoint;
+  },
   characterCustomSkillsById: (state) => (id) => {
     const character = state.characters[id];
     if (character === undefined) {
@@ -518,6 +529,82 @@ export const mutations = {
   setLevel(state, payload) {
     //console.info(`Set Rank manually to ${payload.rank}.`);
     state.characters[payload.id].level = payload.level;
+
+    const hd = parseInt(state.characters[payload.id].hitPoint.hd.substring(1));
+    const char = state.characters[payload.id];
+    const attribute = char.attributes["constitution"];
+    state.characters[payload.id].levelHitPoint[0].hp =
+      hd + Math.floor((attribute - 10) / 2);
+
+    if (VariantHp === "Avg") {
+      for (let i = 2; i <= parseInt(payload.level); i++) {
+        state.characters[payload.id].levelHitPoint.find(
+          (k) => k.level == i
+        ).hp = Math.floor(hd / 2) + 1 + Math.floor((attribute - 10) / 2);
+      }
+
+      if (
+        state.characters[payload.id].levelHitPoint.length !=
+        parseInt(payload.level)
+      ) {
+        const levelMax =
+          state.characters[payload.id].levelHitPoint.slice(-1)[0].level;
+
+        if (levelMax < parseInt(payload.level)) {
+          for (let i = levelMax + 1; i <= parseInt(payload.level); i++) {
+            state.characters[payload.id].levelHitPoint.push({
+              level: i,
+              hp: Math.floor(hd / 2) + 1 + Math.floor((attribute - 10) / 2),
+            });
+          }
+        }
+      }
+    }
+  },
+  setHpCharacter(state, payload) {
+    //console.info(`Set Rank manually to ${payload.rank}.`);
+    const level = parseInt(state.characters[payload.id].level);
+    state.characters[payload.id].levelHitPoint.forEach((k) => {
+      if (level >= k.level) {
+        if (payload.hp) k.hp = payload.hp.find((t) => k.level === t.level).hp;
+        else k.hp = 0;
+      }
+    });
+    //this.setMaxHp(state);
+  },
+  setHitDice(state, payload) {
+    //console.info(`Set Rank manually to ${payload.rank}.`);
+    state.characters[payload.id].hitPoint.hd = payload.hd;
+    //this.setMaxHp(state);
+  },
+  setOneLevelHpCharacter(state, payload) {
+    //console.info(`Set Rank manually to ${payload.rank}.`);
+    const level = parseInt(state.characters[payload.id].level);
+    state.characters[payload.id].levelHitPoint.find((k) => k.level === 1).hp =
+      payload.hp.hp;
+
+    // forEach((k) => {
+    //   if (level >= k.level) {
+    //     if (payload.hp) k.hp = payload.hp.find((t) => k.level === t.level).hp;
+    //     else k.hp = 0;
+    //   }
+    // });
+    //this.setMaxHp(state);
+  },
+  generateHp(state, payload) {
+    const level = parseInt(state.characters[payload.id].level);
+    const hd = parseInt(payload.hd.substring(1));
+    state.characters[payload.id].levelHitPoint.forEach((k) => {
+      if (level >= k.level && k.level !== 1) {
+        let random = 1 + Math.floor(Math.random() * hd);
+        k.hp = random;
+      }
+    });
+  },
+  setMaxHp(state) {
+    let max = 0;
+    state.characters[payload.id].levelHitPoint.forEach((h) => (max += k.hp));
+    state.characters[payload.id].hitPoint.max = max;
   },
   setCharacterSpecies(state, payload) {
     state.characters[payload.id].species = payload.species;
@@ -1001,9 +1088,12 @@ export const mutations = {
    */
   replaceCharacterKeywordPlaceholder(state, payload) {
     const character = state.characters[payload.id];
+    console.log(character, payload);
     if (character.keywords.length > 0) {
       const placeholderKeyword = character.keywords.find(
-        (k) => k.source === payload.source && k.name === payload.placeholder
+        (k) =>
+          k.source === payload.source &&
+          k.name === payload.replacement.placeholder
       );
       if (placeholderKeyword) {
         placeholderKeyword.replacement = payload.replacement;
@@ -1012,6 +1102,14 @@ export const mutations = {
             !(k.source === payload.source && k.name === payload.placeholder)
         );
         character.keywords.push(placeholderKeyword);
+        character.featureChoice.pop((k) => k.name === payload.placeholder);
+        character.featureChoice.push(placeholderKeyword);
+        console.log(
+          "character: ",
+          character,
+          "placeholderKeyword",
+          placeholderKeyword
+        );
       }
     }
   },
@@ -1251,6 +1349,7 @@ const getDefaultState = () => ({
     charisma: 10,
     // initiative: 1,
   },
+  featureChoice: [],
   skills: [
     { name: "athletics", value: 0, isProfiency: false },
     { name: "history", value: 0, isProfiency: false },
@@ -1301,6 +1400,13 @@ const getDefaultState = () => ({
     points: 0, // computed from obtained talents
     spend: 0,
   },
+  hitPoint: {
+    current: 0, // computed from obtained talents
+    max: 0,
+    hd: "d6",
+  },
+  levelHitPoint: [{ level: 1, hp: 0 }],
+  VariantHp: "Avg",
   maxWounds: {
     spend: 0,
   },

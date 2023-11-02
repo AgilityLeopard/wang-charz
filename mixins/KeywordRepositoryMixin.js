@@ -3,6 +3,13 @@ export default {
     const keywordRepository = [
       // General Keywords
       {
+        name: "Боевой стиль",
+        type: "[FSWarrior]",
+        parentKeyword: "Adeptus Astartes",
+        description:
+          "A specific Adeptus Astartes Chapter (replaces this keyword when chosen).",
+      },
+      {
         name: "Psyker",
         type: "General",
         parentKeyword: undefined,
@@ -448,6 +455,21 @@ export default {
       },
     ];
     const keywordSubwordRepository = [
+      //Fighting Styles
+      {
+        type: "DuelSword",
+        placeholder: "FSWarrior",
+        name: "Дуэльный меч",
+        option: "FSWarrior",
+        description: "Туть ",
+      },
+      {
+        type: "Shield",
+        placeholder: "FSWarrior",
+        option: "FSWarrior",
+        name: "Щит",
+        description: "Нашёл! ",
+      },
       // Orders of the Adepta Sororitas
       {
         placeholder: "[Order]",

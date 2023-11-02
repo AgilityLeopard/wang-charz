@@ -16,7 +16,7 @@
 
       <div style="width: 75%">
         <h3 class="headline md0">
-          {{ item.name }}
+          {{ item.nameClass }}
         </h3>
         <span class="subtitle-1 grey--text">{{ item.hint }}</span>
       </div>
@@ -59,7 +59,7 @@
         }}</span>
       </p>
 
-      <div v-for="feature in item.archetypeFeatures" class="text-lg-justify">
+      <div v-for="feature in item.classFeatures" class="text-lg-justify">
         <div>
           <strong>{{ feature.name }}</strong>
           <div v-if="feature.description" v-html="feature.description"></div>
@@ -91,7 +91,7 @@
       <v-btn left outlined color="red" @click="$emit('cancel')"> Cancel </v-btn>
       <v-spacer />
       <v-btn right color="green" @click="$emit('select', item)">
-        Select Archetype
+        Выбрать класс
       </v-btn>
     </v-card-actions>
   </v-card>

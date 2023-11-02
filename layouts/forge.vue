@@ -126,7 +126,7 @@
             :to="routes.stats"
             :disabled="!settingSelected"
           >
-            4. Stats
+            4. Характеристики
           </v-btn>
           <!-- <v-btn small text nuxt :to="routes.talents" :disabled="!settingSelected">
             5. Talents

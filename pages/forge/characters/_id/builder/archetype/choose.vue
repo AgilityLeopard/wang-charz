@@ -87,14 +87,14 @@
             </template>
           </v-autocomplete>
 
-          <v-text-field
+          <!-- <v-text-field
             dense
             outlined
             placeholder="Unaligned Rascal"
             v-model="advancedName"
             label="A short name, describing this 'Archetype'"
           >
-          </v-text-field>
+          </v-text-field> -->
 
           <v-autocomplete
             outlined
@@ -177,7 +177,7 @@
       <v-card>
         <div>
           <v-divider />
-          <v-list subheader>
+          <!-- <v-list subheader>
             <v-subheader>Advanced Character Creation</v-subheader>
             <v-list-item two-line @click.stop="advancedKeywordsDialog = true">
               <v-list-item-avatar tile>
@@ -190,69 +190,68 @@
                 >
               </v-list-item-content>
             </v-list-item>
-          </v-list>
+          </v-list> -->
         </div>
-        <div v-for="(group, key) in archetypeFaction" :key="key">
-          <v-divider />
+        <!-- <div v-for="(group, key) in archetypeFaction" :key="key"> -->
+        <v-divider />
 
-          <v-list v-if="archetypesByFaction(group).length > 0" subheader>
-            <v-subheader>{{ group }}</v-subheader>
+        <!-- <v-list v-if="archetypesByFaction(group).length > 0" subheader> -->
+        <!-- <v-subheader>{{ group }}</v-subheader> -->
 
-            <v-list-item
-              v-for="item in archetypesByFaction(group)"
-              :key="item.key"
-              two-line
-              :disabled="item.tier > characterSettingTier"
-              @click.stop="updatePreview(item)"
-            >
-              <v-list-item-avatar tile>
-                <img :src="getAvatar(item.key)" />
-              </v-list-item-avatar>
+        <v-list-item
+          v-for="item in archetypesByFaction(group)"
+          :key="item.key"
+          two-line
+          :disabled="item.tier > characterSettingTier"
+          @click.stop="updatePreview(item)"
+        >
+          <v-list-item-avatar tile>
+            <img :src="getAvatar(item.key)" />
+          </v-list-item-avatar>
 
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ item.name }}
-                  <v-chip
-                    v-if="
-                      item.source &&
-                      !['core', 'coreab'].includes(item.source.key)
-                    "
-                    color="info"
-                    outlined
-                    tags
-                    x-small
-                    label
-                  >
-                    {{ item.source.key.toUpperCase() }}
-                  </v-chip>
-                </v-list-item-title>
-                <v-list-item-subtitle>{{ item.hint }}</v-list-item-subtitle>
-              </v-list-item-content>
+          <v-list-item-content>
+            <v-list-item-title>
+              {{ item.nameClass }}
+              <v-chip
+                v-if="
+                  item.source && !['core', 'coreab'].includes(item.source.key)
+                "
+                color="info"
+                outlined
+                tags
+                x-small
+                label
+              >
+                {{ item.source.key.toUpperCase() }}
+              </v-chip>
+            </v-list-item-title>
+            <v-list-item-subtitle>{{ item.hint }}</v-list-item-subtitle>
+          </v-list-item-content>
 
-              <v-list-item-action class="hidden-sm-and-up">
-                <v-btn dense icon>
-                  <v-icon color="primary"> arrow_forward_ios </v-icon>
-                </v-btn>
-              </v-list-item-action>
-              <v-list-item-action class="hidden-xs-only">
-                <v-chip pill color="green" text-color="white">
-                  <v-avatar left class="green darken-4">
-                    {{ item.cost }}
-                  </v-avatar>
-                  XP
-                </v-chip>
-              </v-list-item-action>
-              <v-list-item-action class="hidden-xs-only">
-                <v-chip pill color="red" text-color="white">
-                  <v-avatar left class="red darken-4">
-                    {{ item.tier }}
-                  </v-avatar>
-                  Tier
-                </v-chip>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list>
-        </div>
+          <v-list-item-action class="hidden-sm-and-up">
+            <v-btn dense icon>
+              <v-icon color="primary"> arrow_forward_ios </v-icon>
+            </v-btn>
+          </v-list-item-action>
+          <!-- <v-list-item-action class="hidden-xs-only">
+            <v-chip pill color="green" text-color="white">
+              <v-avatar left class="green darken-4">
+                {{ item.cost }}
+              </v-avatar>
+              XP
+            </v-chip>
+          </v-list-item-action> -->
+          <!-- <v-list-item-action class="hidden-xs-only">
+            <v-chip pill color="red" text-color="white">
+              <v-avatar left class="red darken-4">
+                {{ item.tier }}
+              </v-avatar>
+              Tier
+            </v-chip>
+          </v-list-item-action> -->
+        </v-list-item>
+        <!-- </v-list> -->
+        <!-- </div> -->
       </v-card>
     </v-col>
   </v-row>
@@ -366,6 +365,10 @@ export default {
     archetypeFaction() {
       if (this.itemList !== undefined) {
         let archetypes = this.itemList;
+        return [
+          "Unaligned",
+          ...new Set(archetypes.map((item) => item.faction)),
+        ];
 
         if (this.characterSpecies) {
           archetypes = archetypes.filter((a) => {

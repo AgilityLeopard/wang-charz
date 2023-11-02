@@ -2,7 +2,7 @@
   <v-row justify="center">
     <v-col :cols="12">
       <h1 class="headline">
-        Select Attributes and Skills
+        Распределите характеристики и Навыки
         <span>
           <v-icon v-if="alerts && alerts.length <= 0">error_outline</v-icon>
           <v-btn
@@ -23,7 +23,7 @@
             {{ alerts.length }} warning{{ alerts.length > 1 ? "s" : "" }}
           </v-btn>
           <v-btn color="primary" @click="resetStats" outlined small
-            >reset Stats</v-btn
+            >Сбросить характеристики</v-btn
           >
         </span>
       </h1>
@@ -37,7 +37,7 @@
       width="12"
     /> -->
 
-    <v-col :cols="12" v-if="showAlerts">
+    <!-- <v-col :cols="12" v-if="showAlerts">
       <v-alert
         v-for="alert in alerts"
         :key="alert.key"
@@ -58,7 +58,7 @@
           <v-icon right small> library_add </v-icon>
         </v-btn>
       </v-alert>
-    </v-col>
+    </v-col> -->
 
     <!-- <v-col :cols="12" :md="6" v-if="species">
       <v-select
@@ -69,51 +69,45 @@
         :items="advancedBoostOptions"
       />
     </v-col> -->
-    <!-- <v-col :cols="12" :md="6" v-if="archetype"> -->
-    <v-card>
-      <v-simple-table dense>
-        <template v-slot:default>
-          <tbody>
-            <tr v-for="attribute in attributeRepository" :key="attribute.key">
-              <td>{{ attribute.name }}</td>
-              <td>
-                <v-btn
-                  icon
-                  :disabled="characterAttributes[attribute.key] <= 10"
-                  @click="decrementAttribute(attribute.key)"
-                >
-                  <v-icon color="red"> remove_circle </v-icon>
-                </v-btn>
-                {{ characterAttributes[attribute.key] }}
-                <v-btn
-                  icon
-                  :disabled="characterAttributes[attribute.key] >= 18"
-                  @click="incrementAttribute(attribute.key)"
-                >
-                  <v-icon
-                    :color="
-                      affordableAttributeColor(
-                        characterAttributes[attribute.key]
-                      )
-                    "
+    <v-col :cols="12" :md="6">
+      <v-card>
+        <v-simple-table dense>
+          <template v-slot:default>
+            <tbody>
+              <tr v-for="attribute in attributeRepository" :key="attribute.key">
+                <td>{{ attribute.name }}</td>
+                <td>
+                  <v-btn
+                    icon
+                    :disabled="characterAttributes[attribute.key] <= 10"
+                    @click="decrementAttribute(attribute.key)"
                   >
-                    add_circle
-                  </v-icon>
-                </v-btn>
-              </td>
-              <td>{{ characterAttributesEnhanced[attribute.key] }}</td>
-            </tr>
-
-            <!-- <tr v-for="trait in traitRepository" :key="trait.key">
-              <td>{{ trait.name }}:</td>
-              <td>{{ characterTraits[trait.key] }}</td>
-              <td>{{ characterTraitsEnhanced[trait.key] }}</td>
-            </tr> -->
-          </tbody>
-        </template>
-      </v-simple-table>
-    </v-card>
-    <!-- </v-col> -->
+                    <v-icon color="red"> remove_circle </v-icon>
+                  </v-btn>
+                  {{ characterAttributes[attribute.key] }}
+                  <v-btn
+                    icon
+                    :disabled="characterAttributes[attribute.key] >= 18"
+                    @click="incrementAttribute(attribute.key)"
+                  >
+                    <v-icon
+                      :color="
+                        affordableAttributeColor(
+                          characterAttributes[attribute.key]
+                        )
+                      "
+                    >
+                      add_circle
+                    </v-icon>
+                  </v-btn>
+                </td>
+                <td>{{ characterAttributesEnhanced[attribute.key] }}</td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
+      </v-card>
+    </v-col>
 
     <v-col :cols="12" :md="6">
       <v-card>
@@ -160,6 +154,43 @@
         </v-simple-table>
       </v-card>
     </v-col>
+
+    <v-col :cols="12" :md="6" v-if="archetype">
+      <v-card>
+        <v-select
+          dense
+          outlined
+          label="Выберите Вариант распределения Хитов"
+          v-model="hpMethod"
+          :items="selectHpMethod"
+        />
+
+        <v-btn
+          small
+          outlined
+          color="primary"
+          :disabled="hpMethod == 1"
+          @click="generateHp()"
+        >
+          Ролл!
+        </v-btn>
+        <v-simple-table dense>
+          <template v-slot:default>
+            <tbody>
+              <tr
+                v-for="levelHitPoints in hpRepository"
+                :key="levelHitPoints.key"
+              >
+                <td>Уровень: {{ levelHitPoints.level }}:</td>
+                <td>
+                  Количество хитов: {{ computeHitPoints(levelHitPoints) }}
+                </td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
+      </v-card>
+    </v-col>
   </v-row>
 </template>
 
@@ -186,6 +217,7 @@ export default {
       species: undefined,
       loading: false,
       advancedBoost: 1,
+      hpMethod: {},
       isProfiency:  {
         athletics: false,
         history: false ,
@@ -204,7 +236,8 @@ export default {
         stealth:  false ,
         survival:  false ,
         acrobatic: false ,
-        sleightOfHand:  false
+        sleightOfHand:  false,
+        levelHit: [],
         // initiative: 1,
       },
       advancedBoostOptions: [
@@ -213,6 +246,10 @@ export default {
         // { text: '3 - Elite Guardians', value: 3, naming: 'Veteran' },
         // { text: '4 - Heroic Operatives', value: 4, naming: 'Heroic' },
         // { text: '5 - Agents of Fate', value: 5 },
+      ],
+      selectHpMethod: [
+        { text: 'Среднее значение', value: 1, naming: 'Первый вариант' },
+        { text: 'Сгенерировать случайные', value: 2, naming: 'Второй вариант' },
       ],
     };
   },
@@ -327,11 +364,17 @@ export default {
     characterCustomSkills() {
       return this.$store.getters['characters/characterCustomSkillsById'](this.characterId);
     },
+  characterLevelHitPoint() {
+      return this.$store.getters['characters/characterLevelHitPointById'](this.characterId);
+    },
     finalSkillRepository() {
       return [
         ...this.skillRepository,
         ...this.characterCustomSkills,
       ];
+    },
+    hpRepository() {
+      return this.characterLevelHitPoint;
     },
     settingHouserules() {
       return this.$store.getters['characters/characterSettingHouserulesById'](this.characterId);
@@ -358,12 +401,12 @@ export default {
   methods: {
     async loadArchetype(key) {
       this.loading = true;
-      if (key === 'advanced') {
-        this.archetype = { prerequisites: [] };
-      } else {
-        const { data } = await this.$axios.get(`/api/archetypes/${key}`);
-        this.archetype = data;
-      }
+
+      const { data } = await this.$axios.get(`/api/archetypes/${key}`);
+      this.archetype = data;
+
+      this.levelHit = this.characterLevelHitPoint;
+      // this.computedHitPoint(this.levelHit, data, data.hitLevelOne);
       this.loading = false;
     },
     async loadSpecies(key) {
@@ -373,6 +416,7 @@ export default {
       this.species = data;
     },
     resetStats() {
+
       this.$store.commit('characters/resetCharacterStats', { id: this.characterId });
     },
     incrementSkill(skill) {
@@ -382,6 +426,31 @@ export default {
     decrementSkill(skill) {
       const newValue = this.characterSkills[skill] - 1;
       this.$store.commit('characters/setCharacterSkill', { id: this.characterId, payload: { key: skill, value: newValue } });
+    },
+    characterLevel(id) {
+      return this.$store.getters["characters/characterLevelById"](id);
+    },
+    setHpCharacter(hp) {
+      this.$store.commit("characters/setHpCharacter", {
+        id: this.characterId,
+        hp,
+      });
+    },
+    setOneLevelHpCharacter(hp) {
+      this.$store.commit("characters/setOneLevelHpCharacter", {
+        id: this.characterId,
+        hp,
+      });
+    },
+    generateHpCharacter(hd) {
+      this.$store.commit("characters/generateHp", {
+        id: this.characterId,
+        hd
+      });
+    },
+    generateHp(){
+      const hd = this.archetype.hitDice;
+     this.generateHpCharacter(hd);
     },
     //Бонус Мастерства к навыку
     characterIsProfiency(skill) {
@@ -402,7 +471,17 @@ export default {
     },
     incrementAttribute(attribute) {
       const newValue = this.characterAttributes[attribute] + 1;
+      if(attribute  == 'constitution')
+      {
+        const hp = {
+          level: 1,
+          hp:  this.archetype.hitLevelOne + Math.floor((newValue - 10) / 2)
+        };
+        this.setOneLevelHpCharacter(hp);
+      }
+
       this.$store.commit('characters/setCharacterAttribute', { id: this.characterId, payload: { key: attribute, value: newValue } });
+      // if()
     },
     trackingProfiencySkill(skill) {
         if(skill.isProfiency) {
@@ -414,6 +493,14 @@ export default {
     },
     decrementAttribute(attribute) {
       const newValue = this.characterAttributes[attribute] - 1;
+       if(attribute  == 'constitution')
+      {
+        const hp = {
+          level: 1,
+          hp:  this.archetype.hitLevelOne + Math.floor((newValue - 10) / 2)
+        };
+        this.setOneLevelHpCharacter(hp);
+      }
       this.$store.commit('characters/setCharacterAttribute', { id: this.characterId, payload: { key: attribute, value: newValue } });
     },
     skillsByAttribute(attribute) {
@@ -461,7 +548,7 @@ export default {
       const index = this.characterSkills.map((skill) => skill.name).indexOf(skill.key);
         // console.log(skill.name, this.characterSkills[skill.key], Math.floor((attribute - 10) / 2), skill);
         const newValue = this.characterSkills[index];
-         this.isProfiency[newValue.name] = newValue.isProfiency;
+        this.isProfiency[newValue.name] = newValue.isProfiency;
         return newValue.isProfiency;
     },
     computeSkillPool(skill) {
@@ -472,6 +559,14 @@ export default {
         return Math.floor((attribute - 10) / 2) + newValue.value;
       }
       // return this.characterSkills[skill.key];
+    },
+    computeHitPoints(levelHitPoints){
+      const hp = this.characterLevelHitPoint;
+      if(hp !== undefined)
+      {
+        return hp.find(k => k.level === levelHitPoints.level).hp;
+      }
+      return 0;
     },
     ensurePrerequisites() {
       const archetype = this.archetype;
