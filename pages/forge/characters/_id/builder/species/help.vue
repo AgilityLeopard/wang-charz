@@ -2,7 +2,7 @@
   <v-row>
     <v-col>
       <h1 class="headline">
-        Choose a Species
+        Выберите расу
       </h1>
 
       <p>

@@ -96,7 +96,7 @@
             nuxt
             :to="`/forge/characters/${$route.params.id}/builder/setting`"
           >
-            Setting
+            Главная
           </v-btn>
           <v-btn
             small
@@ -116,9 +116,15 @@
           >
             2. Класс
           </v-btn>
-          <!-- <v-btn small text nuxt :to="routes.ascension" :disabled="!settingSelected">
-            3. Ascension
-          </v-btn> -->
+          <v-btn
+            small
+            text
+            nuxt
+            :to="routes.ascension"
+            :disabled="!settingSelected"
+          >
+            3. Предыстории
+          </v-btn>
           <v-btn
             small
             text
@@ -126,7 +132,7 @@
             :to="routes.stats"
             :disabled="!settingSelected"
           >
-            4. Характеристики
+            3. Характеристики
           </v-btn>
           <!-- <v-btn small text nuxt :to="routes.talents" :disabled="!settingSelected">
             5. Talents
@@ -137,15 +143,15 @@
           <!-- <v-btn small text nuxt :to="routes.psychic" :disabled="!settingSelected">
             7. Psychic Powers
           </v-btn> -->
-          <v-btn
+          <!-- <v-btn
             small
             text
             nuxt
             :to="routes.background"
             :disabled="!settingSelected"
           >
-            8. Background
-          </v-btn>
+            4. Предыстория
+          </v-btn> -->
           <v-btn
             small
             nuxt
@@ -333,7 +339,7 @@ export default {
         {
           id: 4,
           path: this.routes.stats,
-          hint: "Статисткиа",
+          hint: "Статистика",
           text: "Характеристики и Навыки",
           // cost: this.characterAttributeCost + this.characterSkillCost,
         },

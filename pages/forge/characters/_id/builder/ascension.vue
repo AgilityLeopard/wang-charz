@@ -9,7 +9,7 @@ export default {
   props: [],
   head() {
     return {
-      title: 'Select Ascension Package',
+      title: 'Выберите предысторию',
     };
   },
   data() {

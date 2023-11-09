@@ -213,7 +213,7 @@
                 style="background-color: hsl(4, 90%, 58%); color: #fff"
                 class="body-1 pt-1 pb-1"
               >
-                <h2 class="subtitle-1">Attributes</h2>
+                <h2 class="subtitle-1">Характеристики</h2>
               </v-card-title>
 
               <v-simple-table dense>
@@ -772,12 +772,11 @@
                     label
                     small
                     v-for="item in [
-                      `All`,
-                      `Species`,
-                      `Archetype`,
-                      `Ascension`,
-                      `Talents`,
-                      `Other`,
+                      `Все`,
+                      `Раса`,
+                      `Класс`,
+                      `Предыстория`,
+                      `Другое`,
                     ]"
                     :key="item.toLowerCase()"
                     :value="item.toLowerCase()"
@@ -790,8 +789,8 @@
                   <!-- species < abilities -->
                   <div
                     v-show="
-                      abilitySection.selection === 'species' ||
-                      (abilitySection.selection === 'all' &&
+                      abilitySection.selection === 'раса' ||
+                      (abilitySection.selection === 'все' &&
                         speciesAbilities.length > 0)
                     "
                   >
@@ -799,7 +798,7 @@
                       class="mb-1"
                       style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
                     >
-                      <span class="body-2 red--text">Species</span>
+                      <span class="body-2 red--text">Расы</span>
                     </div>
                     <div
                       v-for="ability in speciesAbilities"
@@ -836,14 +835,14 @@
                       align="center"
                       class="mt-2 mb-2"
                     >
-                      <em>No abilities? Human eh?</em>
+                      <em>Нет особенностей, вы что, Человек?</em>
                     </div>
                   </div>
 
                   <!-- archetype < abilities -->
                   <div
                     v-show="
-                      ['all', 'archetype'].some(
+                      ['все', 'класс'].some(
                         (i) => i === abilitySection.selection
                       )
                     "
@@ -852,7 +851,7 @@
                       class="mb-1"
                       style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
                     >
-                      <span class="body-2 red--text">Archetype</span>
+                      <span class="body-2 red--text">Класс</span>
                     </div>
 
                     <div
@@ -900,8 +899,8 @@
                   <!-- Ascensions < abilities (Background, Other) -->
                   <div
                     v-show="
-                      abilitySection.selection === 'ascension' ||
-                      (abilitySection.selection === 'all' &&
+                      abilitySection.selection === 'предыстория' ||
+                      (abilitySection.selection === 'все' &&
                         ascensionAbilities.length > 0)
                     "
                   >
@@ -909,7 +908,7 @@
                       class="mb-1"
                       style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
                     >
-                      <span class="body-2 red--text">Ascension</span>
+                      <span class="body-2 red--text">Предыстория</span>
                     </div>
 
                     <div
@@ -2342,8 +2341,8 @@ export default {
       const abilities = [];
       const archetype = this.characterArchetype;
 
-      if (archetype && archetype.archetypeFeatures) {
-        archetype.archetypeFeatures.forEach((feature) => {
+      if (archetype && archetype.classFeature) {
+        archetype.classFeature.forEach((feature) => {
           const ability = {
             name: feature.name,
             effect: feature.snippet ? feature.snippet : feature.description,
@@ -2959,7 +2958,7 @@ export default {
         replacement: undefined,
         custom: true,
       };
-      this.$store.commit('characters/addCharacterKeyword', { id: this.characterId, keyword });
+      //this.$store.commit('characters/addCharacterKeyword', { id: this.characterId, keyword });
 
       this.closeKeywordsSettings();
     },

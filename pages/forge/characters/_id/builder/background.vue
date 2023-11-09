@@ -1,47 +1,57 @@
 <template lang="html">
-
   <v-row justify="center">
-
     <!-- headline -->
     <v-col :cols="12">
-
-      <h2>Manage Backgrounds</h2>
-      <span>Select a background for each Section and choose a single Trait bonus.</span>
+      <h2>Выберите предысторию</h2>
+      <span>Выберите предыстории для вашего персонажа</span>
 
       <v-alert v-if="selectedPlusOne" type="info" text dense>
-        <strong>{{selectedPlusOne.title}}: </strong>You add +1 to your {{selectedPlusOne.plusOne}}
+        <strong>{{ selectedPlusOne.title }}: </strong>You add +1 to your
+        {{ selectedPlusOne.plusOne }}
       </v-alert>
-
     </v-col>
 
     <!-- Backgrounds -->
     <v-col :cols="12">
       <v-alert
-          v-if="backgroundSectionTypes.length <= 0"
-          type="warning"
-          dense text
+        v-if="backgroundSectionTypes.length <= 0"
+        type="warning"
+        dense
+        text
       >
-        No fitting associated faction found for <strong>{{characterFactionKey}}</strong>. Check with your GM what background options are available.
+        No fitting associated faction found for
+        <strong>{{ characterFactionKey }}</strong
+        >. Check with your GM what background options are available.
       </v-alert>
       <div v-for="type in backgroundSectionTypes" class="mt-2 mb-4">
-        <h3>{{type}}</h3>
+        <h3>{{ type }}</h3>
         <v-select
-            v-model="selectedBackgrounds[type.toLowerCase()]"
-            :items="backgroundsByType(type)"
-            outlined
-            dense
-            @change="changeBackground"
-            item-value="key"
-            item-text="label"
-            persistent-hint
-            :hint="backgroundHint(selectedBackgrounds[type.toLowerCase()])"
+          v-model="selectedBackgrounds[type.toLowerCase()]"
+          :items="backgroundsByType(type)"
+          outlined
+          dense
+          @change="changeBackground"
+          item-value="key"
+          item-text="label"
+          persistent-hint
+          :hint="backgroundHint(selectedBackgrounds[type.toLowerCase()])"
         ></v-select>
         <v-btn
-            small
-            :disabled="!selectedBackgrounds[type.toLowerCase()] || (selectedPlusOne && selectedPlusOne.key === selectedBackgrounds[type.toLowerCase()])"
-            :color="selectedPlusOne && selectedPlusOne.key === selectedBackgrounds[type.toLowerCase()] ? 'success' : ''"
-            @click="selectPlusOne(selectedBackgrounds[type.toLowerCase()])"
-        >Use this bonus</v-btn>
+          small
+          :disabled="
+            !selectedBackgrounds[type.toLowerCase()] ||
+            (selectedPlusOne &&
+              selectedPlusOne.key === selectedBackgrounds[type.toLowerCase()])
+          "
+          :color="
+            selectedPlusOne &&
+            selectedPlusOne.key === selectedBackgrounds[type.toLowerCase()]
+              ? 'success'
+              : ''
+          "
+          @click="selectPlusOne(selectedBackgrounds[type.toLowerCase()])"
+          >Use this bonus</v-btn
+        >
       </div>
     </v-col>
 
@@ -60,7 +70,8 @@
               :close="language.name != 'Low Gothic'"
               @click:close="removeLanguage(language.name)"
             >
-              <strong>{{language.name}}</strong>&nbsp;
+              <strong>{{ language.name }}</strong
+              >&nbsp;
               <span v-if="language.cost > 0">({{ language.cost }} XP)</span>
             </v-chip>
           </v-chip-group>
@@ -68,10 +79,12 @@
         <v-divider></v-divider>
         <v-card-text>
           <p>
-            Every character starts with <strong>Low Gothic</strong> and an additional language, common to your homeworld or origin.
+            Every character starts with <strong>Low Gothic</strong> and an
+            additional language, common to your homeworld or origin.
           </p>
           <p>
-            You can learn additional languages for 1 XP each. Exotic languages might cost more. Check with your GM.
+            You can learn additional languages for 1 XP each. Exotic languages
+            might cost more. Check with your GM.
           </p>
           <v-text-field
             v-model="languageInput"
@@ -286,7 +299,7 @@ export default {
           type: 'keyword',
           replacement: undefined,
         };
-        this.$store.commit('characters/addCharacterKeyword', { id, keyword });
+        // this.$store.commit('characters/addCharacterKeyword', { id, keyword });
       }
     },
     clearPlusOne() {
@@ -309,5 +322,4 @@ export default {
 };
 </script>
 
-<style scoped lang="css">
-</style>
+<style scoped lang="css"></style>

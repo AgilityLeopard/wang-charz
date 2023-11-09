@@ -1,67 +1,73 @@
 <template>
   <v-row justify="center">
-
     <v-col>
-      <h1 class="headline">
-        Manage Ascension Package(s)
-      </h1>
+      <h1 class="headline">Просмотр предыстории</h1>
     </v-col>
 
-    <v-col
-      v-if="characterAscensionPackages.length > 0"
-      :cols="12"
-    >
+    <v-col v-if="characterAscensionPackages.length > 0" :cols="12">
       <v-card
         v-for="characterAscension in characterAscensionPackages"
         :key="characterAscension.key"
         class="mb-2"
       >
         <div class="d-flex flex-no-wrap justify-space-between">
-
           <div>
             <v-card-title
               class="headline"
-              v-text="characterAscension.name"
+              v-text="characterAscension.nameAscension"
             ></v-card-title>
-            <v-card-subtitle v-text="characterAscension.teaser"></v-card-subtitle>
+            <v-card-subtitle
+              v-text="characterAscension.teaser"
+            ></v-card-subtitle>
             <v-btn
               small
               text
               color="red"
               @click="removePackage(characterAscension)"
             >
-              <v-icon left>
-                remove_circle
-              </v-icon>
-              remove package
+              <v-icon left> remove_circle </v-icon>
+              удалить предысторию
             </v-btn>
           </div>
 
-            <v-avatar
-              class="ma-2"
-              size="100"
-              tile
-            >
-              <img :alt="characterAscension.name" :src="`/img/avatars/ascension/${characterAscension.key}.png`" />
-            </v-avatar>
+          <v-avatar class="ma-2" size="100" tile>
+            <img
+              :alt="characterAscension.name"
+              :src="`/img/avatars/ascension/${characterAscension.key}.png`"
+            />
+          </v-avatar>
         </div>
 
         <v-card-text>
           <p class="text-lg-justify">
-            <strong>Ascended Tier: </strong>{{ characterAscension.sourceTier }} -> {{ characterAscension.targetTier }}
+            <strong>Ascended Tier: </strong
+            >{{ characterAscension.sourceTier }} ->
+            {{ characterAscension.targetTier }}
           </p>
           <p class="text-lg-justify">
             <strong>Build Point Cost: </strong>
-            {{ (characterAscension.targetTier * characterAscension.costPerTier) + characterAscension.cost }}
-            <span v-if="characterAscension.costPerTier > 0">(New Tier x {{ characterAscension.costPerTier }})</span>
+            {{
+              characterAscension.targetTier * characterAscension.costPerTier +
+              characterAscension.cost
+            }}
+            <span v-if="characterAscension.costPerTier > 0"
+              >(New Tier x {{ characterAscension.costPerTier }})</span
+            >
           </p>
 
-          <div v-if="characterAscension.prerequisites && characterAscension.prerequisites.length > 0">
+          <div
+            v-if="
+              characterAscension.prerequisites &&
+              characterAscension.prerequisites.length > 0
+            "
+          >
             <span class="mt-2 grey--text">Prerequisites</span>
             <v-divider class="mb-2" />
 
             <ul class="text-lg-justify mb-4">
-              <li v-for="prerequisite in characterAscension.prerequisites">{{prerequisite}}</li>
+              <li v-for="prerequisite in characterAscension.prerequisites">
+                {{ prerequisite }}
+              </li>
             </ul>
           </div>
 
@@ -70,8 +76,16 @@
 
           <p class="text-lg-justify">
             <strong>Influence Bonus: </strong>
-            {{ (characterAscension.influencePerTier * (characterAscension.targetTier - characterAscension.sourceTier)) + characterAscension.influenceBonus }}
-            <span v-if="characterAscension.influencePerTier > 0">( {{ characterAscension.influencePerTier }} per tier ascended)</span>
+            {{
+              characterAscension.influencePerTier *
+                (characterAscension.targetTier -
+                  characterAscension.sourceTier) +
+              characterAscension.influenceBonus
+            }}
+            <span v-if="characterAscension.influencePerTier > 0"
+              >( {{ characterAscension.influencePerTier }} per tier
+              ascended)</span
+            >
           </p>
 
           <div
@@ -84,7 +98,7 @@
             <p v-else>{{ feature.snippet }}</p>
 
             <!-- keyword with <> Keyword choice -->
-            <div
+            <!-- <div
               class="ml-2 mr-2"
               v-if="keywordPlaceholders(feature).length > 0"
               v-for="placeholder in keywordPlaceholders(feature)"
@@ -100,18 +114,23 @@
                 persistent-hint
                 solo
                 dense
-                @change="updateKeyword(placeholder, placeholder.selected, characterAscension, feature)"
+                @change="
+                  updateKeyword(
+                    placeholder,
+                    placeholder.selected,
+                    characterAscension,
+                    feature
+                  )
+                "
               />
 
-              <p v-if="selectedKeywords[placeholder.name]" class="ma-4" >
+              <p v-if="selectedKeywords[placeholder.name]" class="ma-4">
                 {{ keywordEffect(selectedKeywords[placeholder.name]) }}
               </p>
-
-            </div>
+            </div> -->
 
             <!-- feature with spells -->
             <div class="ml-2 mr-2" v-if="feature.psychicPowers">
-
               <div
                 v-for="powerOption in feature.psychicPowers"
                 class="ml-2 mr-2"
@@ -124,8 +143,22 @@
                   item-text="name"
                   :hint="psychicPowerHint(powerOption.selected)"
                   persistent-hint
-                  @change="setFeaturePowersChoice($event, characterAscension, feature, powerOption)"
-                  v-show="!(powerOption.requiredAscendedTiers && (characterAscension.targetTier - characterAscension.sourceTier) < powerOption.requiredAscendedTiers)"
+                  @change="
+                    setFeaturePowersChoice(
+                      $event,
+                      characterAscension,
+                      feature,
+                      powerOption
+                    )
+                  "
+                  v-show="
+                    !(
+                      powerOption.requiredAscendedTiers &&
+                      characterAscension.targetTier -
+                        characterAscension.sourceTier <
+                        powerOption.requiredAscendedTiers
+                    )
+                  "
                   dense
                   solo
                 />
@@ -139,31 +172,44 @@
                   dense
                   disabled
                 ></v-checkbox>
-
               </div>
             </div>
 
             <!-- feature with wargear -->
-            <div
-              v-if="feature.wargear && feature.wargear.length > 0"
-            >
+            <div v-if="feature.wargear && feature.wargear.length > 0">
               <!-- features wargear options -->
               <div
-                v-for="wargearOption in feature.wargear.filter((w) => w.options)"
+                v-for="wargearOption in feature.wargear.filter(
+                  (w) => w.options
+                )"
                 :key="wargearOption.key"
               >
                 <wargear-select
                   :item="wargearOption.selected"
-                  :repository="computeWargearOptionsByFilter(wargearOption.options[0], characterAscension)"
+                  :repository="
+                    computeWargearOptionsByFilter(
+                      wargearOption.options[0],
+                      characterAscension
+                    )
+                  "
                   class="mb-4"
-                  @input="setFeatureWargearChoice($event, characterAscension, feature, wargearOption.key)"
+                  @input="
+                    setFeatureWargearChoice(
+                      $event,
+                      characterAscension,
+                      feature,
+                      wargearOption.key
+                    )
+                  "
                 />
               </div>
             </div>
 
             <!-- Feature with Options -->
-            <div class="ml-2 mr-2" v-if="feature.options && feature.options.length > 0">
-
+            <div
+              class="ml-2 mr-2"
+              v-if="feature.options && feature.options.length > 0"
+            >
               <v-select
                 :items="feature.options"
                 v-model="feature.selected"
@@ -176,7 +222,11 @@
               ></v-select>
 
               <div
-                v-if="feature.selected && feature.selected.length > 0 && featureOptionChoice(feature)"
+                v-if="
+                  feature.selected &&
+                  feature.selected.length > 0 &&
+                  featureOptionChoice(feature)
+                "
                 class="ml-4 mr-4"
               >
                 <!-- feature text and/or description -->
@@ -184,49 +234,62 @@
                   v-if="featureOptionChoice(feature).description"
                   v-html="featureOptionChoice(feature).description"
                 ></div>
-                <p v-else>{{featureOptionChoice(feature).snippet}}</p>
+                <p v-else>{{ featureOptionChoice(feature).snippet }}</p>
 
                 <!-- feature options selection -->
                 <div class="ml-2 mr-2" v-if="featureOptionChoice(feature)">
-
                   <div
-                    v-if="featureOptionChoice(feature).wargear && featureOptionChoice(feature).wargear.length > 0"
+                    v-if="
+                      featureOptionChoice(feature).wargear &&
+                      featureOptionChoice(feature).wargear.length > 0
+                    "
                   >
                     <!-- features options with wargear options -->
                     <div
-                      v-for="wargearOption in featureOptionChoice(feature).wargear"
+                      v-for="wargearOption in featureOptionChoice(feature)
+                        .wargear"
                       :key="wargearOption.key"
                     >
                       <wargear-select
                         :item="wargearOption.selected"
-                        :repository="computeWargearOptionsByFilter(wargearOption.options[0], characterAscension)"
+                        :repository="
+                          computeWargearOptionsByFilter(
+                            wargearOption.options[0],
+                            characterAscension
+                          )
+                        "
                         class="mb-4"
-                        @input="setFeatureOptionWargearChoice($event, characterAscension, feature, wargearOption.key)"
+                        @input="
+                          setFeatureOptionWargearChoice(
+                            $event,
+                            characterAscension,
+                            feature,
+                            wargearOption.key
+                          )
+                        "
                       />
                     </div>
                   </div>
                 </div>
-
               </div>
-
             </div>
-
           </div>
-
         </v-card-text>
       </v-card>
     </v-col>
 
     <v-col :cols="12">
-      <v-alert
+      <!-- <v-alert
         v-for="alert in alerts"
         :key="alert.key"
         :value="true"
         :type="alert.type"
-        text dense
+        text
+        dense
       >
         {{ alert.text }}
-      </v-alert>
+      </v-alert> -->
+
       <v-btn
         @click="choosePackage"
         color="success"
@@ -234,12 +297,10 @@
         :disabled="effectiveCharacterTier >= settingTier"
       >
         <v-icon>add</v-icon>
-        Add an Ascension Package
+        Добавьте предысторию
       </v-btn>
     </v-col>
-
   </v-row>
-
 </template>
 
 <script lang="js">
@@ -338,6 +399,7 @@ export default {
       return selectedKeywords;
     },
     characterSelectedPackages() {
+      console.log(this.$store.getters['characters/characterAscensionPackagesById'](this.characterId));
       return this.$store.getters['characters/characterAscensionPackagesById'](this.characterId);
     },
     characterAscensionPackages() {
@@ -748,5 +810,4 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

@@ -84,9 +84,8 @@
       <v-card class="mt-4">
         <v-card-text>
           <p>
-            You can add your own <strong>custom species</strong>
-            <nuxt-link to="/forge/species">here</nuxt-link>. You can then select
-            it here.
+            Вы можете добавить свою <strong>пользовательскую расу</strong>
+            <nuxt-link to="/forge/species">здесь</nuxt-link>.
           </p>
         </v-card-text>
       </v-card>
@@ -209,7 +208,7 @@ export default {
         id: this.characterId,
         species: {
           key: species.key,
-          label: species.name,
+          label: species.nameSpecies,
           cost: species.costs.species,
         },
       });
@@ -231,10 +230,10 @@ export default {
             type: "keyword",
             replacement: undefined,
           };
-          this.$store.commit("characters/addCharacterKeyword", {
-            id: this.characterId,
-            keyword: payload,
-          });
+          // this.$store.commit("characters/addCharacterKeyword", {
+          //   id: this.characterId,
+          //   keyword: payload,
+          // });
         });
 
       this.$store.commit("characters/clearCharacterPsychicPowersBySource", {
@@ -315,4 +314,21 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.scores__stats {
+  min-width: 20px !important;
+  flex: none !important;
+  border: 1px solid rgb(119, 119, 119) !important;
+  padding: 8px !important;
+
+  h4 {
+    height: 16px !important;
+    font-size: 10px !important;
+  }
+
+  p {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
+</style>

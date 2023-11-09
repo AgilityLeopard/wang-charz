@@ -455,21 +455,69 @@ export default {
       },
     ];
     const keywordSubwordRepository = [
-      //Fighting Styles
+      //Fighting Styles для Воина
       {
+        source: "core",
         type: "DuelSword",
         placeholder: "FSWarrior",
-        name: "Дуэльный меч",
+        name: "Дуэлянт",
+        value: 2,
+        valueKey: "DamageWeapon",
         option: "FSWarrior",
-        description: "Туть ",
+        description:
+          "Пока вы держите рукопашное оружие в одной руке и не используете другого оружия, вы получаете бонус +2 к броскам урона этим оружием. ",
       },
       {
-        type: "Shield",
+        source: "core",
+        type: "Protection",
         placeholder: "FSWarrior",
         option: "FSWarrior",
-        name: "Щит",
-        description: "Нашёл! ",
+        name: "Защита",
+        description:
+          "Если существо, которое вы видите, атакует не вас, а другое существо, находящееся в пределах 5 футов от вас, вы можете Реакцией создать помеху его броску атаки. Для этого вы должны использовать щит [shield]",
       },
+      {
+        source: "core",
+        type: "Defence",
+        placeholder: "FSWarrior",
+        option: "FSWarrior",
+        value: 1,
+        valueKey: "BonusAC",
+        name: "Оборона",
+        description: "Пока вы носите доспехи, вы получаете бонус +1 к КД.",
+      },
+      {
+        source: "core",
+        type: "Great Weapon Fighting",
+        placeholder: "FSWarrior",
+        option: "FSWarrior",
+        name: "Сражение большим оружием",
+        description:
+          "Если у вас выпало «1» или «2» на кости урона оружия при атаке, которую вы совершали рукопашным оружием, удерживая его двумя руками, то вы можете перебросить эту кость, и должны использовать новый результат, даже если снова выпало «1» или «2». Чтобы вы могли воспользоваться этим преимуществом, ваше оружие должно иметь свойство Двуручное или Универсальное.",
+      },
+      {
+        source: "core",
+        type: "Two-Weapon Fighting",
+        placeholder: "FSWarrior",
+        option: "FSWarrior",
+        name: "Сражение двумя оружиями",
+        value: 0,
+        valueKey: "AttDamageWeapon",
+        description:
+          "Если вы сражаетесь двумя оружиями, вы можете добавить модификатор характеристики к урону от второй атаки.",
+      },
+      {
+        source: "core",
+        type: "Archery",
+        placeholder: "FSWarrior",
+        option: "FSWarrior",
+        name: "Стрельба",
+        value: 0,
+        valueKey: "AttackWeapon",
+        description:
+          "Вы получаете бонус +2 к броску атаки, когда атакуете дальнобойным оружием.",
+      },
+
       // Orders of the Adepta Sororitas
       {
         placeholder: "[Order]",

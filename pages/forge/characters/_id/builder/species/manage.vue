@@ -11,11 +11,11 @@
     <v-col v-if="species" :xs="12">
       <div class="d-flex flex-no-wrap justify-space-between mb-2">
         <div>
-          <h3 class="headline">{{ species.name }}</h3>
+          <h3 class="headline">{{ species.nameSpecies }}</h3>
           <h4 class="subtitle-1 grey--text">{{ species.hint }}</h4>
           <v-btn small outlined color="primary" @click="doChangeSpeciesMode">
             <v-icon small>settings</v-icon>
-            change species
+            Сменить расу
           </v-btn>
         </div>
         <v-avatar size="96" tile><img :src="avatar" /></v-avatar>
@@ -24,37 +24,35 @@
       <v-divider />
 
       <div class="mt-2 body-2 text-lg-justify">
-        <!-- <p>
-          <strong>XP Cost:</strong> {{ species.cost }}, incl. Stats ({{
-            species.costs.stats
-          }}
-          XP)
-        </p> -->
-
-        <!-- <p v-if="attributes"><strong>Attributes:</strong> {{ attributes }}</p> -->
-
-        <!-- <p v-if="skills"><strong>Skills:</strong> {{ skills }}</p> -->
-
-        <p><strong>Скорость:</strong> {{ species.speed }}</p>
+        <p><strong>Тип:</strong> {{ species.type }}</p>
+        <p><strong>Размер:</strong> {{ species.size }}</p>
+        <p><strong>Скорость:</strong> {{ species.speed }} футов</p>
       </div>
 
-      <div v-if="species.desc">
+      <!-- Описание расы в тексте -->
+
+      <!-- <div class="mt-2 body-2 text-lg-justify"> -->
+      <div v-if="species.desc" class="mt-2 body-2 text-lg-justify">
         <span class="mt-2 grey--text">Описание</span>
         <p><v-divider /></p>
 
-        <span v-if="species.desc.length <= 0"
-          >No Abilities? At least your xp cost are low...</span
+        <span v-if="species.desc.length <= 0">Эх, тут нет описания</span>
+        <!-- class="spoiler feet_show" -->
+        <details
+          v-for="(tex, key) in species.desc"
+          :key="key"
+          :open="tex.opened"
         >
+          <summary class="h4">
+            <span v-if="tex.name"> {{ tex.name }}</span>
+            <span v-if="!tex.name"> Общее описание</span>
+          </summary>
 
-        <div v-for="tex in species.desc" class="text-lg-justify">
-          <div v-if="tex.description">
-            <strong>{{ tex.name }}</strong>
-            <div v-html="tex.description"></div>
-          </div>
-          <p v-else>
-            <strong>{{ tex.name }}: </strong>{{ tex.description }}
-          </p>
-        </div>
+          <div
+            class="mt-2 body-2 text-lg-justify"
+            v-html="tex.description"
+          ></div>
+        </details>
       </div>
 
       <div v-if="species.speciesFeatures" class="body-2">
@@ -65,9 +63,9 @@
           >No Abilities? At least your xp cost are low...</span
         > -->
 
-        <div v-for="feature in species.speciesFeatures" class="text-lg-justify">
-          <div>
-            <strong>{{ feature.name }}</strong>
+        <div class="text-lg-justify">
+          <div class="mt-2 body-2 text-lg-justify">
+            <!-- <strong>{{ feature.name }}</strong>
             <div v-if="feature.description" v-html="feature.description"></div>
             <p v-else>{{ feature.snippet }}</p>
             <v-alert
@@ -78,9 +76,28 @@
               dense
               text
               >{{ alert.text }}</v-alert
-            >
-          </div>
+            > -->
+            <span class="mt-2 grey--text">Особенности</span>
+            <p><v-divider /></p>
 
+            <!-- <span v-if="species.desc.length <= 0">Эх, тут нет описания</span> -->
+            <details
+              v-for="(feature, i) in species.speciesFeatures"
+              :key="key"
+              :open="feature.opened"
+            >
+              <summary class="h4">
+                <span v-if="feature.name"> {{ feature.name }}</span>
+                <span v-if="!feature.name"> Общее описание</span>
+              </summary>
+
+              <div
+                class="mt-2 body-2 text-lg-justify"
+                v-html="feature.description"
+              ></div>
+            </details>
+          </div>
+          <!-- 
           <div v-if="feature.options && feature.options.length > 0">
             <div v-for="inx in feature.selected.length">
               <v-select
@@ -166,10 +183,10 @@
                   color="primary"
                   >add_circle</v-icon
                 >
-                <!--or
+                or
                 Let the Galaxy Burn
                 <v-icon v-if="settingHomebrews.includes('ltgb')" small color="success">check_circle</v-icon>
-                <v-icon v-else @click="enableHomebrew('ltgb')" small color="primary">add_circle</v-icon>-->
+                <v-icon v-else @click="enableHomebrew('ltgb')" small color="primary">add_circle</v-icon>
               </em>
             </v-alert>
             <v-select
@@ -201,6 +218,7 @@
               {{ tradition.effect }}
             </p>
           </div>
+           -->
         </div>
       </div>
     </v-col>
@@ -223,6 +241,7 @@ export default {
       loading: false,
       species: undefined,
       chapterList: undefined,
+      model: [],
     };
   },
   computed: {
@@ -499,5 +518,196 @@ export default {
   },
 };
 </script>
+<style lang="scss">
+/********* Сворачивание текста / details  *********/
+details {
+  margin-left: -8px;
+  margin-right: -8px;
+  margin-top: 28px;
 
-<style scoped></style>
+  summary {
+    padding: 8px 8px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    color: var(--text-color-title);
+    position: relative;
+    cursor: pointer;
+    background: var(--bg-details-title);
+    border-radius: 8px;
+    width: auto;
+    margin: 0;
+    gap: 8px;
+
+    &.h4 {
+      font-size: var(--h4-font-size);
+      font-weight: 400;
+    }
+  }
+
+  .content {
+    padding: 0 8px;
+  }
+}
+
+details[open] {
+  summary {
+    background: none;
+    border-radius: 0;
+    border-bottom: 1px solid;
+    border-color: var(--border);
+    margin: 0 0 8px 8px;
+    padding: 8px 0;
+
+    .source-data {
+      margin-right: 48px;
+    }
+  }
+}
+
+details {
+  &.inside {
+    margin-left: 8px;
+    margin-right: 8px;
+    border-radius: 8px;
+    background-color: var(--bg-details-title);
+
+    summary {
+      border-bottom: 0;
+      margin-bottom: 0;
+    }
+  }
+}
+
+details[open] {
+  &.inside {
+    summary {
+      border-bottom: 1px solid;
+      border-color: var(--border);
+      margin-bottom: 8px;
+    }
+
+    padding-bottom: 4px;
+  }
+}
+
+details[open] {
+  &.lvl {
+    background-color: var(--bg-details-title);
+
+    .content {
+      padding: 4px 8px;
+    }
+  }
+}
+
+summary::marker {
+  content: "";
+}
+
+summary:before {
+  right: 32px;
+  position: absolute;
+  content: "➕";
+  width: 0;
+  height: 0;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  opacity: 0.7;
+}
+
+details[open] > summary::before {
+  content: "➖";
+}
+
+@media (max-width: 800px) {
+  summary::before {
+    right: 28px;
+  }
+}
+
+summary.h5 {
+  font-size: var(--h5-font-size);
+  font-weight: 400;
+  line-height: 18px;
+  margin: 0 0 8px 0;
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+summary.h4:hover,
+summary.h5:hover {
+  color: var(--text-color);
+}
+
+.optional-rules {
+  margin-right: 8px;
+}
+
+.source-data {
+  text-align: right;
+  margin-left: auto;
+  margin-right: 40px;
+  text-transform: uppercase;
+  color: var(--text-g-color);
+  font-size: var(--main-font-size);
+}
+
+h4.separator_card {
+  width: 100%;
+  margin-left: 8px;
+}
+
+.archetype_feet {
+  color: var(--text-a-color) !important;
+}
+
+.align_left {
+  text-align: left !important;
+}
+
+details.spoiler {
+  padding: 0 0 4px 0;
+  margin: 24px -8px 16px -8px;
+  border-radius: 8px;
+
+  .content {
+    padding: 8px 16px;
+  }
+}
+
+details[open].spoiler {
+  background-color: var(--bg-details-title);
+
+  summary {
+    .source-data {
+      margin-right: 40px;
+    }
+  }
+}
+
+details[open].spoiler > summary.h4 {
+  margin: 0 0 4px 0;
+  padding: 8px 8px;
+  background: var(--hover);
+  border-radius: 8px 8px 0 0;
+}
+
+details[open].spoiler > summary::after {
+  right: 8px !important;
+}
+
+details[open].spoiler h4 > span {
+  font-size: calc(var(--h4-font-size) - 2px);
+}
+
+details[open].spoiler table {
+  background-color: var(--bg-sub-menu);
+  border-radius: 8px;
+}
+
+details[open].spoiler div > details {
+  margin-bottom: 0;
+}
+</style>

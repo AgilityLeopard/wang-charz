@@ -113,7 +113,7 @@ export default {
             type: (keyword.includes('[')) ? 'placeholder' : 'keyword',
             replacement: undefined,
           };
-          this.$store.commit('characters/addCharacterKeyword', { id: this.characterId, keyword: payload });
+          //this.$store.commit('characters/addCharacterKeyword', { id: this.characterId, keyword: payload });
         });
       }
 
@@ -182,5 +182,4 @@ export default {
 };
 </script>
 
-<style scoped lang="css">
-</style>
+<style scoped lang="css"></style>

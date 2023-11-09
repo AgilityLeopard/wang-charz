@@ -576,7 +576,7 @@ export default {
           type: k.includes("[") ? "placeholder" : "keyword",
           replacement: undefined,
         };
-        this.$store.commit("characters/addCharacterKeyword", { id, keyword });
+        // this.$store.commit("characters/addCharacterKeyword", { id, keyword });
       });
 
       this.advancedKeywordsDialog = false;
@@ -592,7 +592,7 @@ export default {
         id,
         archetype: {
           key: item.key,
-          value: item.name,
+          value: item.nameClass,
           cost: item.costs.archetype,
           tier: item.tier,
         },
@@ -652,10 +652,10 @@ export default {
             type: keyword.includes("[") ? "placeholder" : "keyword",
             replacement: undefined,
           };
-          this.$store.commit("characters/addCharacterKeyword", {
-            id: this.characterId,
-            keyword: payload,
-          });
+          // this.$store.commit("characters/addCharacterKeyword", {
+          //   id: this.characterId,
+          //   keyword: payload,
+          // });
         });
       }
 

@@ -1,7 +1,5 @@
 <template>
-
   <v-row>
-
     <!-- Ascension Dialog -->
     <v-dialog
       v-model="dialog"
@@ -22,25 +20,22 @@
 
     <!-- ascension headline -->
     <v-col>
-      <h1 class="headline">
-        Select an Ascension Package
-      </h1>
+      <h1 class="headline">Выберите предысторию</h1>
 
       <v-alert
         v-for="alert in alerts"
         :key="alert.key"
         :value="true"
         :type="alert.type"
-        text dense
+        text
+        dense
       >
         {{ alert.text }}
       </v-alert>
     </v-col>
 
     <!-- ascension options -->
-    <v-col
-      :cols="12"
-    >
+    <v-col :cols="12">
       <v-card>
         <v-list>
           <v-list-item
@@ -50,21 +45,26 @@
             @click.stop="openDialog(item)"
           >
             <v-list-item-avatar tile size="64">
-              <img :alt="item.name" :src="`/img/avatars/ascension/${item.key}.png`" />
+              <img
+                :alt="item.nameAscension"
+                :src="`/img/avatars/ascension/${item.key}.png`"
+              />
             </v-list-item-avatar>
 
             <v-list-item-content>
               <v-list-item-title>
-                {{ item.name }}
+                {{ item.nameAscension }}
                 <v-chip
-                  v-if="item.source && !['core', 'coreab'].includes(item.source.key)"
+                  v-if="
+                    item.source && !['core', 'coreab'].includes(item.source.key)
+                  "
                   color="info"
                   outlined
                   tags
                   x-small
                   label
                 >
-                  {{item.source.key.toUpperCase()}}
+                  {{ item.source.key.toUpperCase() }}
                 </v-chip>
               </v-list-item-title>
               <v-list-item-subtitle>{{ item.hint }}</v-list-item-subtitle>
@@ -72,18 +72,14 @@
 
             <v-list-item-action>
               <v-btn dense icon>
-                <v-icon color="primary">
-                  arrow_forward_ios
-                </v-icon>
+                <v-icon color="primary"> arrow_forward_ios </v-icon>
               </v-btn>
             </v-list-item-action>
           </v-list-item>
         </v-list>
       </v-card>
     </v-col>
-
   </v-row>
-
 </template>
 
 <script lang="js">
@@ -174,7 +170,7 @@ export default {
       const payload = {
         id,
         key: ascensionPackage.key,
-        value: ascensionPackage.name,
+        value: ascensionPackage.nameAscension,
         cost,
         sourceTier: ascensionPackage.sourceTier,
         targetTier,
@@ -219,7 +215,7 @@ export default {
           type: 'keyword',
           replacement: undefined,
         };
-        this.$store.commit('characters/addCharacterKeyword', { id: this.characterId, keyword: payload });
+        //this.$store.commit('characters/addCharacterKeyword', { id: this.characterId, keyword: payload });
       });
 
       modifications
@@ -281,5 +277,4 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

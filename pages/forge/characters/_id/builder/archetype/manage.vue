@@ -38,10 +38,10 @@
           {{ item.hitLevelOne + modCon }}
         </p>
 
-        <p>
+        <!-- <p>
           <strong>Species:</strong>
           {{ item.species.map((s) => s.name).join(", ") }}
-        </p>
+        </p> -->
 
         <!-- <p>
           <strong>XP Cost:</strong> {{ item.cost }}, incl. Archetype ({{
@@ -252,12 +252,12 @@
 
         <!-- Wargear -->
         <div>
-          <strong>Wargear</strong>
-          <p>{{ wargearText }}</p>
+          <span class="mt-2 grey--text">Снаряжение:</span>
+          <p><v-divider /></p>
         </div>
         <v-alert text border-left dense type="info" class="caption ml-4 mr-4">
-          You can add your (starting) equipment in the
-          <em>6. Wargear</em> section.
+          Вы можете добавить своё стартовое снаряжение в разделе:
+          <em>6. Снаряжение</em>
         </v-alert>
 
         <v-divider class="mb-4" v-if="suggestedSkills"></v-divider>
@@ -639,17 +639,20 @@ export default {
       // finalData = this.enrichArchetypeFeatures(finalData);
 
       this.item = finalData;
-      const hp = [{ level: 1, hp: this.item.hitLevelOne + this.modCon }];
-      const hd = parseInt(this.item.hitDice.substring(1));
-      const level = this.characterLevel(this.characterId);
-      for (let i = 2; i <= parseInt(level); i++) {
-        hp.push({
-          level: i,
-          hp: Math.floor(hd / 2) + 1 + this.modCon,
-        });
+      if (this.characterVariantHP(this.characterId) === "Avg") {
+        const hp = [{ level: 1, hp: this.item.hitLevelOne + this.modCon }];
+        const hd = parseInt(this.item.hitDice.substring(1));
+        const level = this.characterLevel(this.characterId);
+        for (let i = 2; i <= parseInt(level); i++) {
+          hp.push({
+            level: i,
+            hp: Math.floor(hd / 2) + 1 + this.modCon,
+          });
+        }
+        this.setHpCharacter(hp);
+        this.setHidDice(this.item.hitDice);
       }
-      this.setHpCharacter(hp);
-      this.setHidDice(this.item.hitDice);
+
       this.loading = false;
     },
     enrichArchetypeFeatures(archetype) {
@@ -832,10 +835,10 @@ export default {
             type: "keyword",
             replacement: undefined,
           };
-          this.$store.commit("characters/addCharacterKeyword", {
-            id: this.characterId,
-            keyword: payload,
-          });
+          // this.$store.commit("characters/addCharacterKeyword", {
+          //   id: this.characterId,
+          //   keyword: payload,
+          // });
         });
       }
     },

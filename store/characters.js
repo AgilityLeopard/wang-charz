@@ -502,6 +502,9 @@ export const mutations = {
   setCharacterAvatar(state, payload) {
     state.characters[payload.id].avatarUrl = payload.url;
   },
+  setCharacterVariantHp(state, payload) {
+    state.characters[payload.id].VariantHp = payload.VariantHp;
+  },
   setSettingTier(state, payload) {
     state.characters[payload.id].settingTier = payload.tier;
   },
@@ -536,11 +539,13 @@ export const mutations = {
     state.characters[payload.id].levelHitPoint[0].hp =
       hd + Math.floor((attribute - 10) / 2);
 
-    if (VariantHp === "Avg") {
+    if (state.characters[payload.id].VariantHp === "Avg") {
       for (let i = 2; i <= parseInt(payload.level); i++) {
-        state.characters[payload.id].levelHitPoint.find(
+        const lvlhp = state.characters[payload.id].levelHitPoint.find(
           (k) => k.level == i
-        ).hp = Math.floor(hd / 2) + 1 + Math.floor((attribute - 10) / 2);
+        );
+        if (lvlhp)
+          lvlhp.hp = Math.floor(hd / 2) + 1;
       }
 
       if (
@@ -554,7 +559,7 @@ export const mutations = {
           for (let i = levelMax + 1; i <= parseInt(payload.level); i++) {
             state.characters[payload.id].levelHitPoint.push({
               level: i,
-              hp: Math.floor(hd / 2) + 1 + Math.floor((attribute - 10) / 2),
+              hp: Math.floor(hd / 2) + 1,
             });
           }
         }

@@ -4,7 +4,7 @@
       <h1 class="headline">
         Распределите характеристики и Навыки
         <span>
-          <v-icon v-if="alerts && alerts.length <= 0">error_outline</v-icon>
+          <!-- <v-icon v-if="alerts && alerts.length <= 0">error_outline</v-icon>
           <v-btn
             color="warning"
             v-else-if="showAlerts"
@@ -21,7 +21,7 @@
           >
             <v-icon small left>error_outline</v-icon>show
             {{ alerts.length }} warning{{ alerts.length > 1 ? "s" : "" }}
-          </v-btn>
+          </v-btn> -->
           <v-btn color="primary" @click="resetStats" outlined small
             >Сбросить характеристики</v-btn
           >
@@ -61,6 +61,7 @@
     </v-col> -->
 
     <!-- <v-col :cols="12" :md="6" v-if="species">
+    
       <v-select
         dense
         outlined
@@ -69,7 +70,7 @@
         :items="advancedBoostOptions"
       />
     </v-col> -->
-    <v-col :cols="12" :md="6">
+    <v-col :cols="12" :md="4">
       <v-card>
         <v-simple-table dense>
           <template v-slot:default>
@@ -109,7 +110,7 @@
       </v-card>
     </v-col>
 
-    <v-col :cols="12" :md="6">
+    <v-col :cols="12" :md="4">
       <v-card>
         <v-simple-table dense>
           <template v-slot:default>
@@ -155,7 +156,7 @@
       </v-card>
     </v-col>
 
-    <v-col :cols="12" :md="6" v-if="archetype">
+    <v-col :cols="12" :md="4" v-if="archetype">
       <v-card>
         <v-select
           dense
@@ -163,6 +164,7 @@
           label="Выберите Вариант распределения Хитов"
           v-model="hpMethod"
           :items="selectHpMethod"
+          @change="changeCharacterVariantHp(hpMethod)"
         />
 
         <v-btn
@@ -183,7 +185,8 @@
               >
                 <td>Уровень: {{ levelHitPoints.level }}:</td>
                 <td>
-                  Количество хитов: {{ computeHitPoints(levelHitPoints) }}
+                  Количество хитов:
+                  {{ computeHitPoints(levelHitPoints) + modCon }}
                 </td>
               </tr>
             </tbody>
@@ -217,7 +220,7 @@ export default {
       species: undefined,
       loading: false,
       advancedBoost: 1,
-      hpMethod: {},
+      hpMethod: 1,
       isProfiency:  {
         athletics: false,
         history: false ,
@@ -248,8 +251,8 @@ export default {
         // { text: '5 - Agents of Fate', value: 5 },
       ],
       selectHpMethod: [
-        { text: 'Среднее значение', value: 1, naming: 'Первый вариант' },
-        { text: 'Сгенерировать случайные', value: 2, naming: 'Второй вариант' },
+        { text: 'Среднее значение', value: 1, naming: 'Первый вариант', variant: "Avg", current: 0 },
+        { text: 'Сгенерировать случайные', value: 2, naming: 'Второй вариант', variant: "Roll", current: 0 },
       ],
     };
   },
@@ -358,6 +361,15 @@ export default {
     characterTraits() {
       return this.$store.getters['characters/characterTraitsById'](this.characterId);
     },
+    modCon() {
+      const attribute = this.$store.getters[
+        "characters/characterAttributesById"
+      ](this.characterId);
+
+      if (attribute) {
+        return Math.floor((attribute.constitution - 10) / 2);
+      }
+    },
     characterTraitsEnhanced() {
       return this.$store.getters['characters/characterTraitsEnhancedById'](this.characterId);
     },
@@ -406,6 +418,10 @@ export default {
       this.archetype = data;
 
       this.levelHit = this.characterLevelHitPoint;
+      if(this.characterVariantHP(this.characterId))
+        this.selectHpMethod[0].current = 1
+      else
+        this.selectHpMethod[1].current = 0
       // this.computedHitPoint(this.levelHit, data, data.hitLevelOne);
       this.loading = false;
     },
@@ -416,8 +432,33 @@ export default {
       this.species = data;
     },
     resetStats() {
-
       this.$store.commit('characters/resetCharacterStats', { id: this.characterId });
+    },
+    changeCharacterVariantHp(method){
+      this.selectHpMethod.forEach(k => k.current = 0);
+      this.selectHpMethod.find(k=> k.value === method).current = 1;
+      this.CharacterVariantHp(this.selectHpMethod.find(k=> k.value === method).variant);
+      const hp = [{ level: 1, hp: this.archetype.hitLevelOne + this.modCon }];
+      console.log(hp);
+      if(this.selectHpMethod.find(k=> k.value === method).variant === "Avg")
+      {
+        const hd = parseInt(this.archetype.hitDice.substring(1));
+        const level = this.characterLevel(this.characterId);
+
+        for (let i = 2; i <= parseInt(level); i++) {
+          hp.push({
+            level: i,
+            hp: Math.floor(hd / 2) + 1 + this.modCon,
+          });
+        }
+        this.setHpCharacter(hp);
+      }
+    },
+    CharacterVariantHp(VariantHp){
+      this.$store.commit('characters/setCharacterVariantHp', { id: this.characterId, payload: { VariantHp: VariantHp } });
+    },
+    characterVariantHP(id) {
+      return this.$store.getters["characters/characterVariantHpById"](id);
     },
     incrementSkill(skill) {
       const newValue = this.characterSkills[skill] + 1;
@@ -449,7 +490,7 @@ export default {
       });
     },
     generateHp(){
-      const hd = this.archetype.hitDice;
+     const hd = this.archetype.hitDice;
      this.generateHpCharacter(hd);
     },
     //Бонус Мастерства к навыку
@@ -475,7 +516,7 @@ export default {
       {
         const hp = {
           level: 1,
-          hp:  this.archetype.hitLevelOne + Math.floor((newValue - 10) / 2)
+          hp:  this.archetype.hitLevelOne
         };
         this.setOneLevelHpCharacter(hp);
       }
@@ -497,7 +538,7 @@ export default {
       {
         const hp = {
           level: 1,
-          hp:  this.archetype.hitLevelOne + Math.floor((newValue - 10) / 2)
+          hp:  this.archetype.hitLevelOne
         };
         this.setOneLevelHpCharacter(hp);
       }
